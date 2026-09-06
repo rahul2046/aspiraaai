@@ -1,0 +1,655 @@
+import React, { useState, useEffect, useMemo, useRef } from 'react';
+import {
+  Sparkles, CheckCircle2, ChevronRight, FileText, Search, UserCheck, 
+  Award, Briefcase, Users, Building2, TrendingUp, Download, Play, 
+  ArrowRight, ShieldCheck, Zap, Menu, X, Plus, Trash2, Edit3, Share2, 
+  MessageSquare, Star, BarChart3, Clock, Check, AlertCircle, Copy, 
+  BookOpen, ExternalLink, RefreshCw, Mic, Volume2, Globe, GraduationCap,
+  Layers, Lock, ChevronDown, CheckCircle, Flame, Filter, Trophy
+} from 'lucide-react';
+
+const INITIAL_RESUME_DATA = {
+  personal: {
+    fullName: "",
+    email: "student@college.edu.in",
+    phone: "+91 98765 43210",
+    location: "Bengaluru, India",
+    linkedin: "linkedin.com/in/student-profile",
+    github: "github.com/student-dev",
+    portfolio: "studentportfolio.dev"
+  },
+  education: [
+    {
+      id: "edu_1",
+      institution: "National Institute of Technology Karnataka (NITK), Surathkal",
+      degree: "B.Tech",
+      branch: "Computer Science & Engineering",
+      cgpa: "8.8/10",
+      gradYear: "2025"
+    }
+  ],
+  experience: [
+    {
+      id: "exp_1",
+      title: "Frontend Developer Intern",
+      company: "TechNova Solutions",
+      location: "Bengaluru (Remote)",
+      duration: "May 2024 - Jul 2024",
+      description: "Developed and optimized client-facing dashboards using React, Tailwind CSS, and Redux Toolkit. Increased page render speed by 35% through lazy loading."
+    }
+  ],
+  projects: [
+    {
+      id: "proj_1",
+      name: "CampusConnect - Event Portal",
+      tech: "React, Node.js, MongoDB, Tailwind",
+      link: "github.com/student-dev/campus-connect",
+      description: "Built a central event management system serving 3,500+ students across 12 campus clubs. Streamlined seat registration and ticket issuing."
+    },
+    {
+      id: "proj_2",
+      name: "Smart Resume Parser",
+      tech: "Python, FastAPI, SpaCy, NLP",
+      link: "github.com/student-dev/resume-parser",
+      description: "Engineered an NLP model to extract skill entities from raw PDFs with 89% accuracy. Processed 1,000+ test resumes."
+    }
+  ],
+  skills: {
+    technical: ["React.js", "JavaScript (ES6+)", "Python", "Node.js", "SQL", "Tailwind CSS", "Git/GitHub", "REST APIs"],
+    soft: ["Problem Solving", "Team Leadership", "Agile Collaboration"],
+    tools: ["VS Code", "Figma", "Postman", "Docker Basics"]
+  },
+  certifications: ["AWS Certified Cloud Practitioner", "Meta Front-End Developer Specialization"],
+  achievements: ["Finalist - Smart India Hackathon 2023", "Branch Rank #4 out of 140 students"]
+};
+
+const MOCK_JOBS = [
+  {
+    id: "job_1",
+    title: "Software Engineer Intern",
+    company: "Zomato",
+    logo: "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=120&h=120",
+    location: "Gurugram / Remote",
+    stipend: "₹40,000 / month",
+    type: "Internship (6 Months)",
+    matchingScore: 92,
+    matchingSkills: ["React.js", "JavaScript (ES6+)", "Python", "SQL", "Git/GitHub"],
+    missingSkills: ["TypeScript", "AWS"],
+    description: "Looking for a high-energy SDE intern with strong CS fundamentals, hands-on React knowledge, and data structuring skills."
+  },
+  {
+    id: "job_2",
+    title: "Associate Product Manager Intern",
+    company: "Swiggy",
+    logo: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&q=80&w=120&h=120",
+    location: "Bengaluru",
+    stipend: "₹45,000 / month",
+    type: "Internship",
+    matchingScore: 84,
+    matchingSkills: ["Problem Solving", "Team Leadership", "Figma", "SQL"],
+    missingSkills: ["Product Analytics", "Mixpanel"],
+    description: "Work directly with Senior PMs on consumer growth, funnel optimization, and user research projects across top tier cities."
+  },
+  {
+    id: "job_3",
+    title: "Backend Engineer Intern",
+    company: "Razorpay",
+    logo: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&q=80&w=120&h=120",
+    location: "Bengaluru",
+    stipend: "₹50,000 / month",
+    type: "Full-Time Hiring Track",
+    matchingScore: 78,
+    matchingSkills: ["Python", "Node.js", "SQL", "REST APIs"],
+    missingSkills: ["Go", "Kafka", "Redis"],
+    description: "Join the Core Payments team. Build ultra-scalable, low-latency microservices handling millions of API transactions daily."
+  }
+];
+
+const INITIAL_APPLICATIONS = [
+  { id: "app_1", company: "Zomato", role: "SDE Intern", date: "Oct 12, 2026", status: "Applied", atsScore: 91, nextAction: "Awaiting Assessment" },
+  { id: "app_2", company: "CRED", role: "Frontend Developer", date: "Oct 08, 2026", status: "Assessment", atsScore: 88, nextAction: "Code Test due in 2 days" },
+  { id: "app_3", company: "PhonePe", role: "Software Engineer", date: "Sep 28, 2026", status: "Interview", atsScore: 94, nextAction: "Technical Round 2 - Oct 18" },
+  { id: "app_4", company: "BrowserStack", role: "SDET Intern", date: "Sep 15, 2026", status: "Offer", atsScore: 89, nextAction: "Offer Acceptance Pending" }
+];
+
+const MOCK_LEADERBOARD = [
+  { rank: 1, college: "VIT Vellore", state: "Tamil Nadu", activeStudents: "4,820", ambassadors: 18, clubScore: 9850 },
+  { rank: 2, college: "NITK Surathkal", state: "Karnataka", activeStudents: "3,140", ambassadors: 12, clubScore: 9420 },
+  { rank: 3, college: "BITS Pilani", state: "Rajasthan", activeStudents: "2,950", ambassadors: 14, clubScore: 9110 },
+  { rank: 4, college: "IIT Bombay", state: "Maharashtra", activeStudents: "2,810", ambassadors: 11, clubScore: 8900 },
+  { rank: 5, college: "PES University", state: "Karnataka", activeStudents: "2,430", ambassadors: 9, clubScore: 8540 }
+];
+
+export default function App() {
+  const [activeTab, setActiveTab] = useState('home');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
+  const [applications, setApplications] = useState(INITIAL_APPLICATIONS);
+  
+  const [atsInputText, setAtsInputText] = useState("");
+  const [atsTargetJD, setAtsTargetJD] = useState("");
+  const [atsResults, setAtsResults] = useState(null);
+  const [isAnalyzingATS, setIsAnalyzingATS] = useState(false);
+
+  const [toastMessage, setToastMessage] = useState(null);
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const navigateTo = (tab) => {
+    setActiveTab(tab);
+    setMobileMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleAnalyzeATS = () => {
+    if (!atsInputText && !resumeData.personal.fullName) {
+      showToast("Please enter or paste resume content to analyze.");
+      return;
+    }
+
+    setIsAnalyzingATS(true);
+    setTimeout(() => {
+      const textToAnalyze = (atsInputText + " " + JSON.stringify(resumeData)).toLowerCase();
+      const jdText = atsTargetJD.toLowerCase();
+
+      let keywordScore = 75;
+      let skillsScore = 80;
+      let experienceScore = 78;
+      let formattingScore = 92;
+      let educationScore = 88;
+
+      if (jdText) {
+        const keywords = ["python", "react", "sql", "git", "aws", "agile", "api", "communication", "leadership"];
+        let matched = 0;
+        keywords.forEach(kw => {
+          if (jdText.includes(kw) && textToAnalyze.includes(kw)) matched++;
+        });
+        keywordScore = Math.min(98, Math.max(55, Math.floor((matched / keywords.length) * 100) + 20));
+      }
+
+      const overall = Math.round((keywordScore * 0.3) + (skillsScore * 0.25) + (experienceScore * 0.2) + (formattingScore * 0.15) + (educationScore * 0.1));
+
+      const missingKeywords = [];
+      if (!textToAnalyze.includes("aws")) missingKeywords.push("AWS / Cloud Fundamentals");
+      if (!textToAnalyze.includes("docker")) missingKeywords.push("Docker Containerization");
+      if (!textToAnalyze.includes("agile")) missingKeywords.push("Agile / Scrum Methodology");
+      if (!textToAnalyze.includes("ci/cd")) missingKeywords.push("CI/CD Automation Pipelines");
+
+      setAtsResults({
+        overall,
+        keywordMatch: keywordScore,
+        skillsMatch: skillsScore,
+        experienceRelevance: experienceScore,
+        formatting: formattingScore,
+        educationMatch: educationScore,
+        missingKeywords,
+        suggestions: [
+          "Add quantifiable metrics to project descriptions (e.g., 'improved speed by 30%').",
+          "Include target keywords from job description directly in your Skills section.",
+          "Ensure experience dates use consistent MM/YYYY formatting.",
+          "Add 2 more backend micro-services keywords for target SWE roles."
+        ]
+      });
+      setIsAnalyzingATS(false);
+      showToast("ATS Audit complete! Review actionable suggestions below.");
+    }, 1200);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased">
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 z-50 bg-indigo-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-indigo-400/30 animate-bounce">
+          <Sparkles className="w-5 h-5 text-amber-300 flex-shrink-0" />
+          <span className="text-sm font-medium">{toastMessage}</span>
+        </div>
+      )}
+
+      <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigateTo('home')}>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-indigo-500/20">
+              A
+            </div>
+            <div className="flex flex-col">
+              <span className="text-xl font-black tracking-tight text-white flex items-center gap-1">
+                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">OS</span>
+              </span>
+            </div>
+          </div>
+
+          <nav className="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-300">
+            <button onClick={() => navigateTo('home')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'home' ? 'text-white bg-slate-800/60 font-semibold' : 'hover:text-white hover:bg-slate-800/30'}`}>Home</button>
+            <button onClick={() => navigateTo('ats')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'ats' ? 'text-white bg-slate-800/60 font-semibold' : 'hover:text-white hover:bg-slate-800/30'}`}>ATS Score</button>
+            <button onClick={() => navigateTo('builder')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'builder' ? 'text-white bg-slate-800/60 font-semibold' : 'hover:text-white hover:bg-slate-800/30'}`}>Resume Builder</button>
+            <button onClick={() => navigateTo('jobs')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'jobs' ? 'text-white bg-slate-800/60 font-semibold' : 'hover:text-white hover:bg-slate-800/30'}`}>Job Match</button>
+            <button onClick={() => navigateTo('interview')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'interview' ? 'text-white bg-slate-800/60 font-semibold' : 'hover:text-white hover:bg-slate-800/30'}`}>Interview Prep</button>
+            <button onClick={() => navigateTo('tracker')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'tracker' ? 'text-white bg-slate-800/60 font-semibold' : 'hover:text-white hover:bg-slate-800/30'}`}>Tracker</button>
+            <button onClick={() => navigateTo('campus')} className={`px-3 py-2 rounded-lg transition-colors flex items-center gap-1.5 ${activeTab === 'campus' ? 'text-indigo-400 bg-indigo-500/10 font-semibold' : 'hover:text-indigo-300 hover:bg-slate-800/30'}`}>
+              <GraduationCap className="w-4 h-4 text-indigo-400" />
+              Campus
+            </button>
+            <button onClick={() => navigateTo('employer')} className={`px-3 py-2 rounded-lg transition-colors ${activeTab === 'employer' ? 'text-amber-400 bg-amber-500/10 font-semibold' : 'hover:text-amber-300 hover:bg-slate-800/30'}`}>Employers</button>
+          </nav>
+
+          <div className="hidden sm:flex items-center gap-3">
+            <button onClick={() => navigateTo('profile')} className="text-xs font-semibold px-3.5 py-2 rounded-lg border border-slate-700 bg-slate-900 text-slate-200 hover:border-slate-500 hover:text-white transition flex items-center gap-2">
+              <UserCheck className="w-4 h-4 text-indigo-400" />
+              <span>{resumeData.personal.fullName ? `${resumeData.personal.fullName.split(' ')[0]}'s Profile` : 'My Profile'}</span>
+            </button>
+            <button onClick={() => navigateTo('builder')} className="text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-sky-500 text-white shadow-md shadow-indigo-500/20 hover:opacity-95 transition">
+              Build Resume
+            </button>
+          </div>
+
+          <div className="lg:hidden flex items-center gap-2">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-b border-slate-800 bg-slate-950 px-4 pt-2 pb-6 space-y-2 text-sm font-medium">
+            <button onClick={() => navigateTo('home')} className="block w-full text-left px-3 py-2 rounded bg-slate-900 text-white">Home</button>
+            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Check ATS Score</button>
+            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Resume Builder</button>
+            <button onClick={() => navigateTo('profile')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Student Career Profile</button>
+            <button onClick={() => navigateTo('jobs')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Job Matching</button>
+            <button onClick={() => navigateTo('interview')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Interview Prep</button>
+            <button onClick={() => navigateTo('tracker')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Application Tracker</button>
+            <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded hover:bg-indigo-950/40 text-indigo-400">Campus & Ambassador</button>
+            <button onClick={() => navigateTo('employer')} className="block w-full text-left px-3 py-2 rounded hover:bg-amber-950/40 text-amber-400">For Employers & Recruiters</button>
+          </div>
+        )}
+      </header>
+
+      <main className="flex-1">
+        {activeTab === 'home' && <HomeView navigateTo={navigateTo} handleAnalyzeATS={handleAnalyzeATS} setAtsInputText={setAtsInputText} setAtsTargetJD={setAtsTargetJD} />}
+        {activeTab === 'ats' && <AtsCheckerSuite atsInputText={atsInputText} setAtsInputText={setAtsInputText} atsTargetJD={atsTargetJD} setAtsTargetJD={setAtsTargetJD} atsResults={atsResults} handleAnalyzeATS={handleAnalyzeATS} isAnalyzingATS={isAnalyzingATS} navigateTo={navigateTo} />}
+        {activeTab === 'builder' && <ResumeBuilderStudio resumeData={resumeData} setResumeData={setResumeData} showToast={showToast} navigateTo={navigateTo} />}
+        {activeTab === 'profile' && <StudentProfileView resumeData={resumeData} navigateTo={navigateTo} showToast={showToast} />}
+        {activeTab === 'jobs' && <JobMatchHub resumeData={resumeData} navigateTo={navigateTo} showToast={showToast} />}
+        {activeTab === 'interview' && <InterviewPrepStudio showToast={showToast} />}
+        {activeTab === 'linkedin' && <LinkedInOptimizerView showToast={showToast} />}
+        {activeTab === 'tracker' && <ApplicationTrackerView applications={applications} setApplications={setApplications} showToast={showToast} />}
+        {activeTab === 'campus' && <CampusEcosystemView navigateTo={navigateTo} showToast={showToast} />}
+        {activeTab === 'employer' && <EmployerPortalView navigateTo={navigateTo} showToast={showToast} />}
+      </main>
+
+      <footer className="border-t border-slate-800 bg-slate-950 text-slate-400 text-sm py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-5 gap-8">
+          <div className="md:col-span-2 space-y-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 to-sky-400 flex items-center justify-center font-bold text-white">A</div>
+              <span className="text-xl font-bold text-white">Aspiraa</span>
+            </div>
+            <p className="text-xs leading-relaxed text-slate-400 max-w-sm">
+              The Career Operating System for Indian College Students. Empowering freshers across 500+ campuses with AI resume intelligence, ATS optimization, placement prep, and campus communities.
+            </p>
+            <div className="text-xs text-slate-500">
+              © {new Date().getFullYear()} Aspiraa Technologies Pvt. Ltd. All rights reserved.
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3">Product Core</h4>
+            <ul className="space-y-2 text-xs">
+              <li><button onClick={() => navigateTo('builder')} className="hover:text-indigo-400 transition">AI Resume Builder</button></li>
+              <li><button onClick={() => navigateTo('ats')} className="hover:text-indigo-400 transition">ATS Checker India</button></li>
+              <li><button onClick={() => navigateTo('jobs')} className="hover:text-indigo-400 transition">Job & Internship Match</button></li>
+              <li><button onClick={() => navigateTo('interview')} className="hover:text-indigo-400 transition">AI Mock Interview Studio</button></li>
+              <li><button onClick={() => navigateTo('linkedin')} className="hover:text-indigo-400 transition">LinkedIn Optimizer</button></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3">Campus Ecosystem</h4>
+            <ul className="space-y-2 text-xs">
+              <li><button onClick={() => navigateTo('campus')} className="hover:text-indigo-400 transition">Campus Ambassador Program</button></li>
+              <li><button onClick={() => navigateTo('campus')} className="hover:text-indigo-400 transition">Aspiraa Campus Clubs</button></li>
+              <li><button onClick={() => navigateTo('campus')} className="hover:text-indigo-400 transition">National College Leaderboard</button></li>
+              <li><button onClick={() => navigateTo('employer')} className="hover:text-indigo-400 transition">TPO & Admin Portal</button></li>
+              <li><button onClick={() => navigateTo('employer')} className="hover:text-indigo-400 transition">Employer Hiring Solutions</button></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-xs font-bold uppercase tracking-wider text-slate-200 mb-3">Target Freshers</h4>
+            <ul className="space-y-2 text-xs">
+              <li className="hover:text-slate-200 cursor-pointer">B.Tech CS / IT Resumes</li>
+              <li className="hover:text-slate-200 cursor-pointer">Electronics & Mechanical Fresher</li>
+              <li className="hover:text-slate-200 cursor-pointer">MBA & Finance Applications</li>
+              <li className="hover:text-slate-200 cursor-pointer">Placement Readiness Test</li>
+              <li className="hover:text-slate-200 cursor-pointer">Freshers Salary Benchmark</li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
+
+function HomeView({ navigateTo, handleAnalyzeATS, setAtsInputText, setAtsTargetJD }) {
+  const [quickPasteText, setQuickPasteText] = useState("");
+  const [quickJdText, setQuickJdText] = useState("");
+
+  const triggerHeroAnalysis = () => {
+    setAtsInputText(quickPasteText || "CSE Undergraduate with React, Node.js and Python projects...");
+    setAtsTargetJD(quickJdText || "Software Engineer Intern skilled in Python, React, and SQL...");
+    navigateTo('ats');
+    handleAnalyzeATS();
+  };
+
+  return (
+    <div className="space-y-20 pb-20">
+      <section className="relative overflow-hidden pt-12 pb-20 border-b border-slate-800/50 bg-gradient-to-b from-slate-950 via-slate-900 to-slate-950">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20"></div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-semibold">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span>The #1 Career OS for Indian Engineering & Business Colleges</span>
+            </div>
+
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+              Your Career. <br />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400">
+                One Powerful Platform.
+              </span>
+            </h1>
+
+            <p className="text-lg text-slate-300 max-w-2xl leading-relaxed mx-auto lg:mx-0">
+              Go seamlessly from <span className="text-white font-semibold">College</span> → <span className="text-indigo-400 font-semibold">Skills</span> → <span className="text-sky-400 font-semibold">Resume</span> → <span className="text-emerald-400 font-semibold">Job Match</span> → <span className="text-amber-400 font-semibold">Interviews</span> → <span className="text-purple-400 font-semibold">Career</span>.
+              Built specifically for Indian students navigating tier-1, 2, and 3 campus placements.
+            </p>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+              <button onClick={() => navigateTo('builder')} className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm shadow-xl shadow-indigo-600/30 transition flex items-center justify-center gap-2 group">
+                <span>Build My Resume Free</span>
+                <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+              </button>
+              <button onClick={() => navigateTo('ats')} className="w-full sm:w-auto px-7 py-3.5 rounded-xl border border-slate-700 bg-slate-900/90 hover:bg-slate-800 text-slate-200 font-semibold text-sm transition flex items-center justify-center gap-2">
+                <Zap className="w-4 h-4 text-amber-400" />
+                <span>Check ATS Score Instant</span>
+              </button>
+            </div>
+
+            <div className="pt-6 border-t border-slate-800/80 grid grid-cols-3 gap-4 text-left max-w-lg mx-auto lg:mx-0">
+              <div>
+                <div className="text-xl font-black text-white">500+</div>
+                <div className="text-xs text-slate-400">Indian Campuses</div>
+              </div>
+              <div>
+                <div className="text-xl font-black text-white">88%</div>
+                <div className="text-xs text-slate-400">ATS Shortlist Rate</div>
+              </div>
+              <div>
+                <div className="text-xl font-black text-white">₹8.4 LPA</div>
+                <div className="text-xs text-slate-400">Avg Fresher Package</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5">
+            <div className="rounded-2xl border border-slate-800 bg-slate-900/90 p-6 shadow-2xl relative overflow-hidden backdrop-blur-xl">
+              <div className="absolute -right-12 -top-12 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-5">
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-rose-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-amber-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+                  <span className="text-xs font-mono text-slate-400 ml-2">aspiraa_ats_engine.v2</span>
+                </div>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  LIVE SIMULATOR
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">Paste Your Resume Snippet or Skills</label>
+                  <textarea 
+                    value={quickPasteText}
+                    onChange={(e) => setQuickPasteText(e.target.value)}
+                    placeholder="E.g., B.Tech CSE student at NIT Surathkal. Experience in React, Python, SQL, REST APIs. Built 2 web projects..."
+                    className="w-full h-24 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none font-mono"
+                  ></textarea>
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-slate-300 block mb-1">Target Job Description (Optional)</label>
+                  <input 
+                    type="text"
+                    value={quickJdText}
+                    onChange={(e) => setQuickJdText(e.target.value)}
+                    placeholder="E.g., SDE Intern at Zomato (Python, React, Data Structures)"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition font-mono"
+                  />
+                </div>
+
+                <button 
+                  onClick={triggerHeroAnalysis}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-white font-bold text-xs uppercase tracking-wider shadow-lg hover:opacity-95 transition flex items-center justify-center gap-2"
+                >
+                  <Sparkles className="w-4 h-4 text-amber-300" />
+                  <span>Analyze ATS Compatibility</span>
+                </button>
+              </div>
+
+              <div className="mt-5 pt-4 border-t border-slate-800/80 grid grid-cols-2 gap-3 text-xs">
+                <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60 flex items-center justify-between">
+                  <span className="text-slate-400">Standard ATS Score:</span>
+                  <span className="text-emerald-400 font-bold">78/100</span>
+                </div>
+                <div className="bg-slate-950/60 p-2.5 rounded-lg border border-slate-800/60 flex items-center justify-between">
+                  <span className="text-slate-400">Keyword Match:</span>
+                  <span className="text-indigo-400 font-bold">82%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="text-center space-y-3 max-w-3xl mx-auto">
+          <h2 className="text-xs font-bold uppercase tracking-widest text-indigo-400">THE STUDENT CAREER OS ECOSYSTEM</h2>
+          <p className="text-3xl sm:text-4xl font-extrabold text-white">Not just a resume builder. Your complete career launchpad.</p>
+          <p className="text-slate-400 text-sm">Every tool connected into a single student graph to move you from campus to top offers.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <FeatureCard icon={<FileText className="w-6 h-6 text-indigo-400" />} title="AI Resume Builder" desc="Construct ATS-parsed single-page resumes formatted for Indian campus placement drives. Includes real-time AI bullet enhancement." actionText="Open Builder" onAction={() => navigateTo('builder')} />
+          <FeatureCard icon={<Zap className="w-6 h-6 text-amber-400" />} title="ATS Scanner & Matcher" desc="Upload your resume against specific Job Descriptions from Swiggy, Zomato, Razorpay or TCS to find missing keywords before applying." actionText="Scan Resume" onAction={() => navigateTo('ats')} />
+          <FeatureCard icon={<UserCheck className="w-6 h-6 text-emerald-400" />} title="Master Career Profile" desc="One verified profile holding your CGPA, projects, certifications, and GitHub links. Auto-generates tailored applications." actionText="View Profile" onAction={() => navigateTo('profile')} />
+          <FeatureCard icon={<Briefcase className="w-6 h-6 text-sky-400" />} title="AI Job Discovery" desc="Discover internships and fresher roles matching your actual skill profile with explicit percentage match scores." actionText="Explore Jobs" onAction={() => navigateTo('jobs')} />
+          <FeatureCard icon={<MessageSquare className="w-6 h-6 text-purple-400" />} title="AI Mock Interview Studio" desc="Practice technical, HR, and behavioral questions with voice feedback on clarity, technical structure, and impact." actionText="Start Mock" onAction={() => navigateTo('interview')} />
+          <FeatureCard icon={<GraduationCap className="w-6 h-6 text-rose-400" />} title="Campus & Ambassador Clubs" desc="Join or lead official Aspiraa Career Clubs in your engineering college. Access placement preparation toolkits & recruiter leads." actionText="Explore Campus" onAction={() => navigateTo('campus')} />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, desc, actionText, onAction }) {
+  return (
+    <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 flex flex-col justify-between hover:border-slate-700 hover:bg-slate-900/90 transition group">
+      <div className="space-y-4">
+        <div className="w-12 h-12 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-center group-hover:scale-105 transition">
+          {icon}
+        </div>
+        <h3 className="text-lg font-bold text-white">{title}</h3>
+        <p className="text-xs text-slate-400 leading-relaxed">{desc}</p>
+      </div>
+      <button onClick={onAction} className="mt-6 inline-flex items-center gap-2 text-xs font-bold text-indigo-400 hover:text-indigo-300 transition">
+        <span>{actionText}</span>
+        <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition" />
+      </button>
+    </div>
+  );
+}
+
+function AtsCheckerSuite({ atsInputText, setAtsInputText, atsTargetJD, setAtsTargetJD, atsResults, handleAnalyzeATS, isAnalyzingATS, navigateTo }) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+      <div className="text-center space-y-3 max-w-2xl mx-auto">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-400 text-xs font-semibold">
+          <Zap className="w-3.5 h-3.5" />
+          <span>Instant ATS Resume Audit Engine</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Check Your ATS Compatibility Score</h1>
+        <p className="text-sm text-slate-400">Parse your resume against target Job Descriptions. Uncover hidden parsing errors and missing keywords.</p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3">
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-indigo-400" /> Your Resume Content
+          </label>
+          <textarea value={atsInputText} onChange={(e) => setAtsInputText(e.target.value)} placeholder="Paste your full resume text here..." className="w-full h-64 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 resize-none font-mono leading-relaxed" />
+        </div>
+
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 space-y-3">
+          <label className="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-sky-400" /> Target Job Description (JD)
+          </label>
+          <textarea value={atsTargetJD} onChange={(e) => setAtsTargetJD(e.target.value)} placeholder="Paste target JD here..." className="w-full h-64 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 resize-none font-mono leading-relaxed" />
+        </div>
+      </div>
+
+      <div className="flex justify-center">
+        <button onClick={handleAnalyzeATS} disabled={isAnalyzingATS} className="px-10 py-4 rounded-xl bg-gradient-to-r from-indigo-500 via-sky-500 to-emerald-500 text-white font-extrabold text-sm uppercase tracking-wider shadow-2xl hover:opacity-95 transition flex items-center gap-3">
+          {isAnalyzingATS ? <RefreshCw className="w-5 h-5 animate-spin text-amber-300" /> : <Sparkles className="w-5 h-5 text-amber-300" />}
+          <span>Run Deep ATS Analysis</span>
+        </button>
+      </div>
+
+      {atsResults && (
+        <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 space-y-8">
+          <div className="flex items-center justify-between pb-6 border-b border-slate-800">
+            <div>
+              <h2 className="text-2xl font-extrabold text-white">ATS Audit Summary</h2>
+            </div>
+            <div className="text-4xl font-black text-emerald-400">{atsResults.overall}/100</div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <h3 className="text-xs font-bold text-rose-400 mb-2">Missing Keywords</h3>
+              <ul className="space-y-1 text-xs text-slate-300">{atsResults.missingKeywords.map((kw, i) => <li key={i}>• {kw}</li>)}</ul>
+            </div>
+            <div className="bg-slate-950 p-4 rounded-xl border border-slate-800">
+              <h3 className="text-xs font-bold text-emerald-400 mb-2">Actionable Suggestions</h3>
+              <ul className="space-y-1 text-xs text-slate-300">{atsResults.suggestions.map((s, i) => <li key={i}>• {s}</li>)}</ul>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ResumeBuilderStudio({ resumeData, setResumeData, showToast, navigateTo }) {
+  const [activeSection, setActiveSection] = useState('personal');
+
+  return (
+    <div className="max-w-[1600px] mx-auto px-4 py-6 space-y-6">
+      <div className="flex justify-between items-center bg-slate-900 border border-slate-800 p-4 rounded-2xl">
+        <h1 className="text-lg font-bold text-white">Live AI Resume Builder</h1>
+        <button onClick={() => showToast("Downloading ATS PDF...")} className="px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold flex items-center gap-2">
+          <Download className="w-4 h-4" /> Download PDF
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="lg:col-span-5 bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+          <h3 className="text-xs font-bold uppercase text-white">Personal Information</h3>
+          <input type="text" placeholder="Full Name" value={resumeData.personal.fullName} onChange={(e) => setResumeData({...resumeData, personal: {...resumeData.personal, fullName: e.target.value}})} className="w-full bg-slate-950 border border-slate-800 p-2.5 text-xs text-white rounded-lg" />
+          <input type="text" placeholder="Email" value={resumeData.personal.email} onChange={(e) => setResumeData({...resumeData, personal: {...resumeData.personal, email: e.target.value}})} className="w-full bg-slate-950 border border-slate-800 p-2.5 text-xs text-white rounded-lg" />
+          <input type="text" placeholder="Location" value={resumeData.personal.location} onChange={(e) => setResumeData({...resumeData, personal: {...resumeData.personal, location: e.target.value}})} className="w-full bg-slate-950 border border-slate-800 p-2.5 text-xs text-white rounded-lg" />
+        </div>
+
+        <div className="lg:col-span-7 bg-white text-slate-900 p-8 rounded-2xl shadow-2xl min-h-[700px] space-y-4">
+          <div className="text-center border-b pb-4">
+            <h1 className="text-2xl font-bold uppercase">{resumeData.personal.fullName || "Your Name"}</h1>
+            <p className="text-xs text-slate-600">{resumeData.personal.email} • {resumeData.personal.phone} • {resumeData.personal.location}</p>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold uppercase border-b pb-1">Education</h2>
+            <p className="text-xs font-semibold">{resumeData.education[0]?.institution} - {resumeData.education[0]?.degree}</p>
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xs font-bold uppercase border-b pb-1">Technical Skills</h2>
+            <p className="text-xs">{resumeData.skills.technical.join(", ")}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function StudentProfileView({ resumeData, navigateTo, showToast }) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
+      <div className="rounded-2xl border border-slate-800 bg-slate-900 p-8 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-black text-white">{resumeData.personal.fullName || "Student Profile"}</h1>
+          <p className="text-xs text-slate-400">{resumeData.education[0]?.institution}</p>
+        </div>
+        <div className="text-3xl font-black text-indigo-400">86% Readiness</div>
+      </div>
+    </div>
+  );
+}
+
+function JobMatchHub({ resumeData, navigateTo, showToast }) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-6">
+      <h1 className="text-3xl font-extrabold text-white text-center">AI Job & Internship Discovery</h1>
+      <div className="space-y-4">
+        {MOCK_JOBS.map(j => (
+          <div key={j.id} className="bg-slate-900 border border-slate-800 p-6 rounded-2xl flex justify-between items-center">
+            <div>
+              <h3 className="text-lg font-bold text-white">{j.title}</h3>
+              <p className="text-xs text-slate-400">{j.company} • {j.stipend}</p>
+            </div>
+            <div className="text-emerald-400 font-bold text-xl">{j.matchingScore}% Match</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function InterviewPrepStudio({ showToast }) {
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-10 space-y-6">
+      <h1 className="text-3xl font-extrabold text-white text-center">AI Mock Interview Studio</h1>
+      <div className="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-4">
+        <p className="text-sm font-semibold text-white">"Tell me about a complex project you built using React or Python."</p>
+        <textarea placeholder="Type your answer using the STAR method..." className="w-full h-32 bg-slate-950 border border-slate-800 p-3 text-xs text-white rounded-xl" />
+        <button onClick={() => showToast("Score: 8.4/10 - Great response structure!")} className="w-full py-3 bg-indigo-600 font-bold text-xs rounded-xl">Evaluate My Answer</button>
+      </div>
+    </div>
+  );
+}
+
+function LinkedInOptimizerView({ showToast }) {
+  return <div className="max-w-4xl mx-auto px-4 py-10 text-center"><h1 className="text-3xl font-extrabold text-white">LinkedIn Optimizer Engine</h1></div>;
+}
+
+function ApplicationTrackerView({ applications, setApplications, showToast }) {
+  return <div className="max-w-7xl mx-auto px-4 py-10"><h1 className="text-3xl font-extrabold text-white">Application Tracker</h1></div>;
+}
+
+function CampusEcosystemView({ navigateTo, showToast }) {
+  return <div className="max-w-7xl mx-auto px-4 py-10"><h1 className="text-3xl font-extrabold text-white">National Campus Network</h1></div>;
+}
+
+function EmployerPortalView({ navigateTo, showToast }) {
+  return <div className="max-w-7xl mx-auto px-4 py-10"><h1 className="text-3xl font-extrabold text-white">Employer Portal</h1></div>;
+}
