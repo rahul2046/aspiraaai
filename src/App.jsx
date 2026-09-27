@@ -1,4 +1,4 @@
- import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Sparkles, CheckCircle2, ChevronRight, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
@@ -734,4 +734,4 @@ function CampusEcosystemView({ showToast }) {
     </div>
   );
 }
-```eof
+```eof 
