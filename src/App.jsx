@@ -8,84 +8,63 @@ import {
 
 const JAKES_INITIAL_DATA = {
   personal: {
-    fullName: "Saddala Reddy Rahul",
-    location: "Mangalore, Karnataka, India",
+    fullName: "First Last",
+    location: "City, State, Country",
     phone: "+91 98765 43210",
-    email: "rahul@college.edu.in",
-    linkedin: "linkedin.com/in/rahul-profile",
-    github: "github.com/rahul-dev",
-    portfolio: "rahulportfolio.dev"
+    email: "student@example.com",
+    linkedin: "linkedin.com/in/username",
+    github: "github.com/username",
+    portfolio: "yourportfolio.dev"
   },
   education: [
     {
       id: "edu_1",
-      institution: "National Institute of Technology Karnataka (NITK), Surathkal",
+      institution: "Your University / Institution Name",
       degree: "Bachelor of Technology (B.Tech)",
-      branch: "Mechanical Engineering",
-      cgpa: "7.15/10",
-      dates: "Nov 2022 – May 2026",
-      location: "Mangalore, Karnataka"
+      branch: "Computer Science & Engineering",
+      cgpa: "8.5/10",
+      dates: "2022 – 2026",
+      location: "City, State"
     }
   ],
   coursework: [
-    "Computational Fluid Dynamics", "Thermodynamics", "Heat Transfer", "Navier-Stokes Equations",
-    "Finite Element Analysis", "CAD/CAM", "Machine Design", "Data Structures & Algorithms"
+    "Data Structures & Algorithms", "Database Management Systems", "Operating Systems", "Computer Networks",
+    "Software Engineering", "Object-Oriented Programming", "System Design", "Web Development"
   ],
   experience: [
     {
       id: "exp_1",
-      company: "CSIR - National Aerospace Laboratories (NAL)",
-      title: "CTFD Research Intern",
+      company: "Example Company / Startup",
+      title: "Software Engineer Intern",
       dates: "May 2025 – July 2025",
-      location: "Bengaluru, India",
+      location: "City, State",
       bullets: [
-        "Conducted 2D lid-driven cavity flow simulations analyzing Navier-Stokes equations and vorticity behavior.",
-        "Utilized ANSYS Fluent and CUDA parallelization to accelerate numerical fluid simulation runtime by 35%.",
-        "Documented vorticity behavior and benchmarked computational efficiency against standard experimental setups."
-      ]
-    },
-    {
-      id: "exp_2",
-      company: "IIT Madras",
-      title: "Aerospace Research Intern",
-      dates: "April 2024 – July 2024",
-      location: "Chennai, India",
-      bullets: [
-        "Analyzed custom airfoil geometries using XFOIL and implemented propeller/wind turbine simulations using actuator disk models.",
-        "Optimized UAV blade configurations applying Blade Element Momentum (BEM) Theory."
+        "Developed and optimized scalable web services using modern full-stack frameworks, reducing load times by 30%.",
+        "Engineered automated test scripts and CI/CD pipelines to streamline deployment workflows.",
+        "Collaborated with cross-functional engineering teams to implement clean, maintainable, and high-quality code."
       ]
     }
   ],
   projects: [
     {
       id: "proj_1",
-      name: "Aspiraa AI - Career Operating System",
-      tech: "React, Tailwind CSS, Lucide-React, Netlify",
-      dates: "Jan 2026 – Present",
+      name: "Project Title",
+      tech: "React, Node.js, Tailwind CSS, PostgreSQL",
+      dates: "Jan 2026",
       bullets: [
-        "Built a single-page career operating system for Indian engineering students featuring Jake's ATS resume builder.",
-        "Integrated real-time PDF parser ATS keyword analysis and campus ambassador leadership tools."
-      ]
-    },
-    {
-      id: "proj_2",
-      name: "Dosthana - P2P Campus Delivery Service",
-      tech: "React, Vite, Node.js, MongoDB",
-      dates: "Oct 2025",
-      bullets: [
-        "Developed a peer-to-peer campus logistics web app serving NITK Surathkal students.",
-        "Optimized order placement workflow and delivery tracking interface for campus dorms."
+        "Built a full-stack web platform enabling real-time user collaboration and dynamic data visualisations.",
+        "Implemented RESTful APIs and secure authentication flows to ensure high reliability and security."
       ]
     }
   ],
   skills: {
-    languages: "Python (NumPy, SciPy, Matplotlib, Pandas), C++, MATLAB, SQL, JavaScript (ES6+)",
-    frameworks: "React, Node.js, Tailwind CSS, Vite, Three.js",
-    tools: "ANSYS Fluent, ANSYS Workbench, AutoCAD, Fusion360, Git/GitHub, Docker, VS Code",
-    libraries: "scikit-learn, BeautifulSoup, SpaCy, HTML5 Canvas",
-    soft: "Problem Solving, Team Leadership, Agile Collaboration, Product Strategy",
-    certifications: "AWS Certified Cloud Practitioner, Meta Front-End Developer Specialization",
-    achievements: "AIR 1270 in GATE XE 2026, Founder & CEO of TractionMint"
+    languages: "Python, C++, Java, JavaScript (ES6+), SQL, HTML/CSS",
+    frameworks: "React.js, Node.js, Express, Tailwind CSS",
+    tools: "Git/GitHub, Docker, VS Code, Postman",
+    libraries: "NumPy, Pandas, SciPy, Matplotlib",
+    soft: "Problem Solving, Team Leadership, Agile Collaboration",
+    certifications: "AWS Certified Cloud Practitioner, Meta Front-End Developer",
+    achievements: "Winner - National Level Hackathon, Top 5% Rank in National Coding Contest"
   }
 };
 
@@ -347,9 +326,9 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
         <div>
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
             <FileText className="w-5 h-5 text-indigo-400" />
-            Jake's Resume Builder (ATS Complete Edition)
+            Jake's Resume Builder (ATS Edition)
           </h1>
-          <p className="text-xs text-slate-400">All input fields including CGPA/GPA, Branch, Coursework, Skills, Certifications & Achievements.</p>
+          <p className="text-xs text-slate-400 font-normal">All input fields including CGPA/GPA, Branch, Coursework, Skills, Certifications & Achievements.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -454,11 +433,11 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
                   <div className="grid grid-cols-3 gap-3">
                     <div>
                       <label className="text-amber-400 text-xs block mb-1 font-bold">CGPA / GPA *</label>
-                      <input type="text" value={edu.cgpa || ""} onChange={(e) => handleEduChange(idx, 'cgpa', e.target.value)} placeholder="8.8/10" className="w-full bg-slate-900 border border-amber-500/40 rounded-lg p-2 text-xs text-amber-300 font-bold focus:border-amber-400 focus:outline-none" />
+                      <input type="text" value={edu.cgpa || ""} onChange={(e) => handleEduChange(idx, 'cgpa', e.target.value)} placeholder="8.5/10" className="w-full bg-slate-900 border border-amber-500/40 rounded-lg p-2 text-xs text-amber-300 font-bold focus:border-amber-400 focus:outline-none" />
                     </div>
                     <div>
                       <label className="text-slate-400 text-xs block mb-1 font-semibold">Graduation Dates</label>
-                      <input type="text" value={edu.dates} onChange={(e) => handleEduChange(idx, 'dates', e.target.value)} placeholder="Nov 2022 – May 2026" className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                      <input type="text" value={edu.dates} onChange={(e) => handleEduChange(idx, 'dates', e.target.value)} placeholder="2022 – 2026" className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none" />
                     </div>
                     <div>
                       <label className="text-slate-400 text-xs block mb-1 font-semibold">City, State</label>
@@ -520,7 +499,7 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
                       <input type="text" value={exp.dates} onChange={(e) => handleExpChange(expIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Location (e.g., Bengaluru, India)</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Location (e.g., City, State)</label>
                       <input type="text" value={exp.location} onChange={(e) => handleExpChange(expIdx, 'location', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                   </div>
@@ -571,13 +550,13 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
                       <input type="text" value={proj.name} onChange={(e) => handleProjChange(projIdx, 'name', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date (e.g., Oct 2025)</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date (e.g., Jan 2026)</label>
                       <input type="text" value={proj.dates} onChange={(e) => handleProjChange(projIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Technologies Used (e.g., Python, ANSYS, React)</label>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Technologies Used (e.g., React, Node.js, Python)</label>
                     <input type="text" value={proj.tech} onChange={(e) => handleProjChange(projIdx, 'tech', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                   </div>
 
@@ -631,7 +610,7 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
               </div>
               <div>
                 <label className="text-amber-400 text-xs block mb-1 font-bold">Key Achievements / Ranks</label>
-                <input type="text" value={resumeData.skills.achievements || ""} onChange={(e) => handleSkillChange('achievements', e.target.value)} placeholder="GATE Rank 1270, Smart India Hackathon Finalist" className="w-full bg-slate-950 border border-amber-500/30 rounded-lg p-2.5 text-xs text-amber-200" />
+                <input type="text" value={resumeData.skills.achievements || ""} onChange={(e) => handleSkillChange('achievements', e.target.value)} placeholder="Hackathon Winner, Top 5% Rank" className="w-full bg-slate-950 border border-amber-500/30 rounded-lg p-2.5 text-xs text-amber-200" />
               </div>
             </div>
           )}
@@ -803,7 +782,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
       setAnalysis({
         score: 88,
         totalKeywords: 18,
-        matchedKeywords: ["Python", "React", "SQL", "Git", "ANSYS", "REST APIs", "Node.js"],
+        matchedKeywords: ["Python", "React", "SQL", "Git", "REST APIs", "Node.js"],
         missingKeywords: ["AWS Lambda", "Kubernetes", "GraphQL", "CI/CD Pipeline"],
         formattingScore: 98,
         recommendations: [
@@ -964,7 +943,7 @@ function CampusEcosystemView({ showToast }) {
     phone: "",
     college: "",
     yearOfStudy: "3rd Year",
-    branch: "Mechanical Engineering",
+    branch: "Computer Science",
     linkedin: "",
     whyApply: ""
   });
@@ -1023,7 +1002,7 @@ function CampusEcosystemView({ showToast }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-slate-400 text-xs block mb-1 font-semibold">University / College Name *</label>
-                  <input type="text" required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="NITK Surathkal, VIT, IIT..." />
+                  <input type="text" required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="Your College Name..." />
                 </div>
                 <div>
                   <label className="text-slate-400 text-xs block mb-1 font-semibold">Phone Number</label>
@@ -1043,7 +1022,7 @@ function CampusEcosystemView({ showToast }) {
                 </div>
                 <div>
                   <label className="text-slate-400 text-xs block mb-1 font-semibold">Branch / Degree</label>
-                  <input type="text" value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="Mechanical, CSE, ECE..." />
+                  <input type="text" value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="Branch Name..." />
                 </div>
               </div>
 
@@ -1092,9 +1071,9 @@ function CampusEcosystemView({ showToast }) {
             </h3>
             <div className="space-y-3">
               {[
-                { name: "Rahul S.", college: "NITK Surathkal", students: "240+ Resumes Built" },
-                { name: "Ananya P.", college: "IIT Madras", students: "190+ Resumes Built" },
-                { name: "Vikram R.", college: "BITS Pilani", students: "150+ Resumes Built" }
+                { name: "Student A.", college: "Engineering College A", students: "240+ Resumes Built" },
+                { name: "Student B.", college: "Institute B", students: "190+ Resumes Built" },
+                { name: "Student C.", college: "University C", students: "150+ Resumes Built" }
               ].map((lead, idx) => (
                 <div key={idx} className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
                   <div>
