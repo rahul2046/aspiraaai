@@ -57,14 +57,22 @@ const JAKES_INITIAL_DATA = {
       ]
     }
   ],
+  awards: [
+    {
+      id: "award_1",
+      title: "Winner - National Hackathon 2025",
+      issuer: "Tech Innovation Summit",
+      dates: "Oct 2025",
+      details: "Awarded 1st place among 150+ competing teams for building an AI-powered automated code reviewer."
+    }
+  ],
   skills: {
     languages: "Python, C++, Java, JavaScript (ES6+), SQL, HTML/CSS",
     frameworks: "React.js, Node.js, Express, Tailwind CSS",
     tools: "Git/GitHub, Docker, VS Code, Postman",
     libraries: "NumPy, Pandas, SciPy, Matplotlib",
     soft: "Problem Solving, Team Leadership, Agile Collaboration",
-    certifications: "AWS Certified Cloud Practitioner, Meta Front-End Developer",
-    achievements: "Winner - National Level Hackathon, Top 5% Rank in National Coding Contest"
+    certifications: "AWS Certified Cloud Practitioner, Meta Front-End Developer"
   }
 };
 
@@ -311,6 +319,35 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
     setResumeData(prev => ({ ...prev, projects: updated }));
   };
 
+  // AWARDS HANDLERS
+  const handleAwardChange = (idx, field, val) => {
+    const updated = [...(resumeData.awards || [])];
+    updated[idx][field] = val;
+    setResumeData(prev => ({ ...prev, awards: updated }));
+  };
+
+  const addAward = () => {
+    setResumeData(prev => ({
+      ...prev,
+      awards: [
+        ...(prev.awards || []),
+        {
+          id: `award_${Date.now()}`,
+          title: "Award Title / Competition Rank",
+          issuer: "Issuing Organization / Host",
+          dates: "Month Year",
+          details: "Short description of the achievement or rank achieved."
+        }
+      ]
+    }));
+  };
+
+  const removeAward = (idx) => {
+    const updated = [...(resumeData.awards || [])];
+    updated.splice(idx, 1);
+    setResumeData(prev => ({ ...prev, awards: updated }));
+  };
+
   const handleSkillChange = (field, val) => {
     setResumeData(prev => ({
       ...prev,
@@ -328,7 +365,7 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
             <FileText className="w-5 h-5 text-indigo-400" />
             Jake's Resume Builder (ATS Edition)
           </h1>
-          <p className="text-xs text-slate-400 font-normal">All input fields including CGPA/GPA, Branch, Coursework, Skills, Certifications & Achievements.</p>
+          <p className="text-xs text-slate-400 font-normal">All input fields including CGPA/GPA, Branch, Coursework, Experience, Projects, Awards & Skills.</p>
         </div>
 
         <div className="flex items-center gap-3">
@@ -345,7 +382,7 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
           
           {/* Section Navigation Pills */}
           <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
-            {['personal', 'education', 'coursework', 'experience', 'projects', 'skills'].map(sec => (
+            {['personal', 'education', 'coursework', 'experience', 'projects', 'awards', 'skills'].map(sec => (
               <button
                 key={sec}
                 onClick={() => setActiveSection(sec)}
@@ -584,10 +621,54 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
             </div>
           )}
 
-          {/* 6. TECHNICAL SKILLS, CERTIFICATIONS & ACHIEVEMENTS */}
+          {/* 6. AWARDS & HONORS (OPTIONAL SECTION) */}
+          {activeSection === 'awards' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Honors & Awards (Optional)</h3>
+                  <p className="text-[11px] text-slate-400">Add competition ranks, hackathon wins, or academic honors.</p>
+                </div>
+                <button onClick={addAward} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                  <Plus className="w-3.5 h-3.5" /> Add Award
+                </button>
+              </div>
+
+              {(resumeData.awards || []).map((award, awardIdx) => (
+                <div key={award.id} className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3 relative group">
+                  <button onClick={() => removeAward(awardIdx)} className="absolute top-3 right-3 text-slate-500 hover:text-rose-400">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Award / Honor Title</label>
+                      <input type="text" value={award.title} onChange={(e) => handleAwardChange(awardIdx, 'title', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date (e.g., Oct 2025)</label>
+                      <input type="text" value={award.dates} onChange={(e) => handleAwardChange(awardIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Issuing Organization / Host</label>
+                    <input type="text" value={award.issuer} onChange={(e) => handleAwardChange(awardIdx, 'issuer', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                  </div>
+
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Short Detail / Description</label>
+                    <input type="text" value={award.details} onChange={(e) => handleAwardChange(awardIdx, 'details', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 7. TECHNICAL SKILLS & CERTIFICATIONS */}
           {activeSection === 'skills' && (
             <div className="space-y-4 animate-fadeIn">
-              <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Skills, Certifications & Achievements</h3>
+              <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Skills & Certifications</h3>
               <div>
                 <label className="text-slate-400 text-xs block mb-1 font-semibold">Programming Languages</label>
                 <input type="text" value={resumeData.skills.languages} onChange={(e) => handleSkillChange('languages', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
@@ -607,10 +688,6 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
               <div>
                 <label className="text-slate-400 text-xs block mb-1 font-semibold">Certifications</label>
                 <input type="text" value={resumeData.skills.certifications || ""} onChange={(e) => handleSkillChange('certifications', e.target.value)} placeholder="AWS Certified, Meta Front-End" className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
-              </div>
-              <div>
-                <label className="text-amber-400 text-xs block mb-1 font-bold">Key Achievements / Ranks</label>
-                <input type="text" value={resumeData.skills.achievements || ""} onChange={(e) => handleSkillChange('achievements', e.target.value)} placeholder="Hackathon Winner, Top 5% Rank" className="w-full bg-slate-950 border border-amber-500/30 rounded-lg p-2.5 text-xs text-amber-200" />
               </div>
             </div>
           )}
@@ -711,9 +788,27 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
             </div>
           )}
 
-          {/* TECHNICAL SKILLS, CERTIFICATIONS & ACHIEVEMENTS */}
+          {/* HONORS & AWARDS (OPTIONAL - HIDES AUTOMATICALLY IF EMPTY) */}
+          {resumeData.awards && resumeData.awards.length > 0 && (
+            <div className="mb-3">
+              <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Honors & Awards</h2>
+              {resumeData.awards.map((award) => (
+                <div key={award.id} className="mb-1.5">
+                  <div className="flex justify-between items-baseline text-[12.5px] text-black font-bold">
+                    <span>{award.title} {award.issuer ? `— ${award.issuer}` : ''}</span>
+                    <span className="text-[12px] font-normal">{award.dates}</span>
+                  </div>
+                  {award.details && (
+                    <p className="text-[11.5px] text-slate-800 pl-3 leading-snug mt-0.5">• {award.details}</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TECHNICAL SKILLS & CERTIFICATIONS */}
           <div>
-            <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills & Achievements</h2>
+            <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills</h2>
             <div className="text-[12px] text-slate-900 space-y-1">
               {resumeData.skills.languages && (
                 <div><strong className="font-bold text-black">Languages:</strong> {resumeData.skills.languages}</div>
@@ -729,9 +824,6 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
               )}
               {resumeData.skills.certifications && (
                 <div><strong className="font-bold text-black">Certifications:</strong> {resumeData.skills.certifications}</div>
-              )}
-              {resumeData.skills.achievements && (
-                <div><strong className="font-bold text-black">Honors & Achievements:</strong> {resumeData.skills.achievements}</div>
               )}
             </div>
           </div>
