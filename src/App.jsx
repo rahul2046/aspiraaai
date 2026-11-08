@@ -1,87 +1,95 @@
-import React, { useState, useRef } from 'react';
+ import React, { useState, useRef } from 'react';
 import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
   GraduationCap, RefreshCw, Trophy, Send, CheckCircle, AlertCircle, Printer, Eye,
-  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, Sliders, ChevronRight, BookOpen, Share2, MessageSquare, ExternalLink, Play
+  Upload, File, Award, Star, ArrowUpRight, Check
 } from 'lucide-react';
 
-const INITIAL_RESUME_DATA = {
+const JAKES_INITIAL_DATA = {
   personal: {
     fullName: "First Last",
-    location: "City, State, Country",
-    phone: "+91 98765 43210",
-    email: "student@example.com",
+    location: "123 Street Name, Town, State 12345",
+    phone: "123-456-7890",
+    email: "email@gmail.com",
     linkedin: "linkedin.com/in/username",
-    github: "github.com/username",
-    portfolio: "yourportfolio.dev"
+    github: "github.com/username"
   },
   education: [
     {
       id: "edu_1",
-      institution: "Your University / Institution Name",
-      degree: "Bachelor of Technology (B.Tech)",
-      branch: "Computer Science & Engineering",
-      cgpa: "8.5/10",
-      dates: "2022 – 2026",
+      institution: "State University",
+      degree: "Bachelor of Science in Computer Science",
+      dates: "May 2021 – May 2025",
       location: "City, State"
     }
   ],
   coursework: [
-    "Data Structures & Algorithms", "Database Management Systems", "Operating Systems", "Computer Networks",
-    "Software Engineering", "Object-Oriented Programming", "System Design", "Web Development"
+    "Data Structures", "Algorithms Analysis", "Artificial Intelligence", "Systems Programming",
+    "Software Methodology", "Database Management", "Internet Technology", "Computer Architecture"
   ],
   experience: [
     {
       id: "exp_1",
-      company: "Example Company / Startup",
+      company: "Electronics Company",
       title: "Software Engineer Intern",
-      dates: "May 2025 – July 2025",
+      dates: "May 2023 – August 2023",
       location: "City, State",
       bullets: [
-        "Developed and optimized scalable web services using modern full-stack frameworks, reducing load times by 30%.",
-        "Engineered automated test scripts and CI/CD pipelines to streamline deployment workflows.",
-        "Collaborated with cross-functional engineering teams to implement clean, maintainable, and high-quality code."
+        "Developed a service to automatically generate a set of unit test cases for a service in order to decrease time needed for test generation by 70% and do bug fixes.",
+        "Engineered scripts using Python and PowerShell to aggregate 1,000+ test results into an automated format used to load test metrics into dashboard, saving 5+ hours weekly.",
+        "Utilized Jenkins to provide a continuous integration service in order to automate building for local build test suite, increasing test velocity by 25%.",
+        "Designed UI components using HTML, JavaScript, and CSS for high-volume customer interface."
+      ]
+    },
+    {
+      id: "exp_2",
+      company: "Startup, Inc.",
+      title: "Front End Developer Intern",
+      dates: "May 2022 – August 2022",
+      location: "City, State",
+      bullets: [
+        "Assisted in development of the front end of a mobile application for iOS/Android using React Native.",
+        "Worked with Google Firebase to manage user data across multiple platforms including web and mobile apps.",
+        "Collaborated with team members using version control systems such as Git to improve maintainability."
       ]
     }
   ],
   projects: [
     {
       id: "proj_1",
-      name: "Project Title",
-      tech: "React, Node.js, Tailwind CSS, PostgreSQL",
-      dates: "Jan 2026",
+      name: "Gym Reservation Bot",
+      tech: "Python, Selenium, Google Cloud Console",
+      dates: "January 2023",
       bullets: [
-        "Built a full-stack web platform enabling real-time user collaboration and dynamic data visualisations.",
-        "Implemented RESTful APIs and secure authentication flows to ensure high reliability and security."
+        "Developed an automated bot using Python and Google Cloud Console to reserve slots for 10+ campus gyms.",
+        "Implemented Twilio to send automated SMS notifications to users upon successful slot reservation.",
+        "Created a Linux virtual machine on Google Cloud to host the bot and execute tasks 24/7."
+      ]
+    },
+    {
+      id: "proj_2",
+      name: "Ticket Price Calculator App",
+      tech: "Java, Android Studio",
+      dates: "November 2022",
+      bullets: [
+        "Created an Android application using Java and Android Studio to estimate ticket prices for events.",
+        "Processed user input data to calculate total price based on date, seat location, and quantity."
       ]
     }
   ],
-  awards: [
-    {
-      id: "award_1",
-      title: "Winner - National Hackathon 2025",
-      issuer: "Tech Innovation Summit",
-      dates: "Oct 2025",
-      details: "Awarded 1st place among 150+ competing teams for building an AI-powered automated code reviewer."
-    }
-  ],
   skills: {
-    languages: "Python, C++, Java, JavaScript (ES6+), SQL, HTML/CSS",
-    frameworks: "React.js, Node.js, Express, Tailwind CSS",
-    tools: "Git/GitHub, Docker, VS Code, Postman",
-    libraries: "NumPy, Pandas, SciPy, Matplotlib",
-    soft: "Problem Solving, Team Leadership, Agile Collaboration",
-    certifications: "AWS Certified Cloud Practitioner, Meta Front-End Developer"
+    languages: "Java, Python, C/C++, SQL (Postgres), JavaScript, HTML/CSS, R",
+    frameworks: "React, Node.js, Flask, JUnit, WordPress, Material-UI, FastAPI",
+    tools: "Git, Docker, Travis CI, Google Cloud Platform, VS Code, Android Studio",
+    libraries: "pandas, NumPy, Matplotlib, OpenCV, PyTorch"
   }
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('landing');
+  const [activeTab, setActiveTab] = useState('builder');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [authModal, setAuthModal] = useState(null); // 'signin' | 'signup' | null
-  const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
-  const [selectedTemplate, setSelectedTemplate] = useState('jakes');
+  const [resumeData, setResumeData] = useState(JAKES_INITIAL_DATA);
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -96,366 +104,939 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/70 text-slate-900 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased relative overflow-x-hidden">
-      
+    <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-indigo-500/30 animate-bounce">
+        <div className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 to-sky-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-indigo-400/40 animate-bounce">
           <Sparkles className="w-5 h-5 text-amber-300 flex-shrink-0 animate-spin" />
           <span className="text-sm font-semibold">{toastMessage}</span>
         </div>
       )}
 
-      {/* AUTH MODAL */}
-      {authModal && (
-        <AuthModal type={authModal} onClose={() => setAuthModal(null)} showToast={showToast} />
-      )}
-
       {/* HEADER NAVBAR */}
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 transition-all print:hidden shadow-sm">
+      <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 transition-all print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigateTo('landing')}>
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center font-bold text-xl text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-all">
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigateTo('builder')}>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
               A
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-2">
-                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200/80 shadow-sm">Career OS</span>
+              <span className="text-xl font-black tracking-tight text-white flex items-center gap-2">
+                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Jake's Resume OS</span>
               </span>
             </div>
           </div>
 
-          <nav className="hidden lg:flex items-center gap-1 text-xs font-semibold text-slate-600">
-            <button onClick={() => navigateTo('landing')} className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'landing' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}>
-              <Layout className="w-4 h-4 text-indigo-600" /> Home
+          <nav className="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-300">
+            <button 
+              onClick={() => navigateTo('builder')} 
+              className={`px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${activeTab === 'builder' ? 'text-white bg-slate-800/80 font-semibold shadow-inner border border-slate-700' : 'hover:text-white hover:bg-slate-800/40'}`}
+            >
+              <FileText className="w-4 h-4 text-indigo-400" />
+              Jake's Resume Builder
             </button>
-            <button onClick={() => navigateTo('builder')} className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'builder' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}>
-              <FileText className="w-4 h-4 text-indigo-600" /> Resume Studio
+            <button 
+              onClick={() => navigateTo('ats')} 
+              className={`px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${activeTab === 'ats' ? 'text-white bg-slate-800/80 font-semibold shadow-inner border border-slate-700' : 'hover:text-white hover:bg-slate-800/40'}`}
+            >
+              <Upload className="w-4 h-4 text-emerald-400" />
+              Upload PDF ATS Scanner
             </button>
-            <button onClick={() => navigateTo('ats')} className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'ats' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}>
-              <Upload className="w-4 h-4 text-emerald-600" /> ATS Audit
-            </button>
-            <button onClick={() => navigateTo('notes')} className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'notes' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}>
-              <BookOpen className="w-4 h-4 text-amber-500" /> Course Notes
-            </button>
-            <button onClick={() => navigateTo('referrals')} className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'referrals' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}>
-              <Share2 className="w-4 h-4 text-sky-500" /> Referral Hub
-            </button>
-            <button onClick={() => navigateTo('campus')} className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'campus' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}>
-              <GraduationCap className="w-4 h-4 text-indigo-600" /> Campus Lead
+            <button 
+              onClick={() => navigateTo('campus')} 
+              className={`px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${activeTab === 'campus' ? 'text-indigo-400 bg-indigo-500/10 font-semibold border border-indigo-500/30' : 'hover:text-indigo-300 hover:bg-slate-800/40'}`}
+            >
+              <GraduationCap className="w-4 h-4 text-indigo-400" />
+              Campus Ambassador
             </button>
           </nav>
 
           <div className="hidden sm:flex items-center gap-3">
-            <button onClick={() => setAuthModal('signin')} className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-indigo-600 transition flex items-center gap-1.5">
-              <LogIn className="w-4 h-4 text-slate-500" /> Sign In
-            </button>
-            <button onClick={() => setAuthModal('signup')} className="px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 text-white shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-1.5">
-              <UserPlus className="w-4 h-4" /> Sign Up Free
+            <button onClick={() => window.print()} className="text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg hover:scale-105 active:scale-95 transition duration-200 flex items-center gap-2">
+              <Printer className="w-4 h-4" />
+              <span>Print / Download PDF</span>
             </button>
           </div>
 
           <div className="lg:hidden flex items-center gap-2">
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-slate-100 text-slate-700">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden border-b border-slate-200 bg-white/95 px-4 pt-2 pb-6 space-y-2 text-sm font-medium animate-fadeIn">
-            <button onClick={() => navigateTo('landing')} className="block w-full text-left px-3 py-2 rounded-xl bg-slate-100 font-bold text-slate-900">Home</button>
-            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700">Resume Studio</button>
-            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700">ATS Audit</button>
-            <button onClick={() => navigateTo('notes')} className="block w-full text-left px-3 py-2 rounded-xl text-amber-600 font-bold">Course Notes & Roadmaps</button>
-            <button onClick={() => navigateTo('referrals')} className="block w-full text-left px-3 py-2 rounded-xl text-sky-600 font-bold">Peer Referral Network</button>
-            <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded-xl text-indigo-600 font-bold">Campus Ambassador</button>
+          <div className="lg:hidden border-b border-slate-800 bg-slate-950 px-4 pt-2 pb-6 space-y-2 text-sm font-medium animate-fadeIn">
+            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded bg-slate-900 text-white">Jake's Resume Builder</button>
+            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Upload PDF ATS Scanner</button>
+            <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded hover:bg-indigo-950/40 text-indigo-400 font-bold">Campus Ambassador</button>
           </div>
         )}
       </header>
 
-      {/* MAIN VIEW CONTROLLER */}
+      {/* DYNAMIC VIEWS */}
       <main className="flex-1">
-        {activeTab === 'landing' && <HeroLandingView navigateTo={navigateTo} setAuthModal={setAuthModal} />}
-        {activeTab === 'builder' && (
-          <JakesResumeStudio 
-            resumeData={resumeData} 
-            setResumeData={setResumeData} 
-            selectedTemplate={selectedTemplate}
-            setSelectedTemplate={setSelectedTemplate}
-            showToast={showToast} 
-          />
-        )}
+        {activeTab === 'builder' && <JakesResumeStudio resumeData={resumeData} setResumeData={setResumeData} showToast={showToast} />}
         {activeTab === 'ats' && <AtsCheckerSuite resumeData={resumeData} showToast={showToast} />}
-        {activeTab === 'notes' && <CourseNotesHub showToast={showToast} />}
-        {activeTab === 'referrals' && <ReferralNetworkHub showToast={showToast} setAuthModal={setAuthModal} />}
         {activeTab === 'campus' && <CampusEcosystemView showToast={showToast} />}
       </main>
 
-      <footer className="border-t border-slate-200/80 bg-white text-slate-500 text-xs py-8 print:hidden text-center">
-        <p>© {new Date().getFullYear()} Aspiraa Placement Ecosystem. Comprehensive Student Career Operating System.</p>
+      <footer className="border-t border-slate-800 bg-slate-950 text-slate-400 text-xs py-8 print:hidden text-center">
+        <p>© {new Date().getFullYear()} Aspiraa Resume OS. Pixel-Perfect Jake's ATS Resume Builder & Placement Platform.</p>
       </footer>
     </div>
   );
 }
 
 // -------------------------------------------------------------
-// 1. COURSE NOTES & PLACEMENT ROADMAPS HUB
+// 1. JAKE'S RESUME BUILDER & LIVE ATS PREVIEW
 // -------------------------------------------------------------
-function CourseNotesHub({ showToast }) {
-  const categories = [
-    {
-      title: "Data Structures & Algorithms",
-      tag: "Computer Science",
-      topics: ["Trees & Graphs Cheat Sheet", "Dynamic Programming Patterns", "Striver SDE Sheet Notes"],
-      color: "bg-indigo-50 border-indigo-200 text-indigo-700"
-    },
-    {
-      title: "System Design & Databases",
-      tag: "Software Engineering",
-      topics: ["SQL Indexing & Normalization", "Distributed Systems 101", "REST API Design Best Practices"],
-      color: "bg-sky-50 border-sky-200 text-sky-700"
-    },
-    {
-      title: "Mechanical & Core Engineering",
-      tag: "Core Engineering",
-      topics: ["Navier-Stokes Equations & CFD Formulas", "Thermodynamics & Heat Exchangers", "FEA & Boundary Conditions"],
-      color: "bg-amber-50 border-amber-200 text-amber-700"
-    },
-    {
-      title: "Aptitude & Technical HR",
-      tag: "Placement Prep",
-      topics: ["Quant & Logical Reasoning Formulas", "STAR Method Behavioral Questions", "Top 50 C++ / OOPs Interview Qs"],
-      color: "bg-emerald-50 border-emerald-200 text-emerald-700"
-    }
-  ];
+function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
+  const [activeSection, setActiveSection] = useState('personal');
+
+  const handlePersonalChange = (field, val) => {
+    setResumeData(prev => ({
+      ...prev,
+      personal: { ...prev.personal, [field]: val }
+    }));
+  };
+
+  const handleEduChange = (idx, field, val) => {
+    const updated = [...resumeData.education];
+    updated[idx][field] = val;
+    setResumeData(prev => ({ ...prev, education: updated }));
+  };
+
+  const handleCourseworkChange = (val) => {
+    const list = val.split(',').map(s => s.trim()).filter(Boolean);
+    setResumeData(prev => ({ ...prev, coursework: list }));
+  };
+
+  const handleExpChange = (idx, field, val) => {
+    const updated = [...resumeData.experience];
+    updated[idx][field] = val;
+    setResumeData(prev => ({ ...prev, experience: updated }));
+  };
+
+  const handleExpBulletChange = (expIdx, bulletIdx, val) => {
+    const updated = [...resumeData.experience];
+    updated[expIdx].bullets[bulletIdx] = val;
+    setResumeData(prev => ({ ...prev, experience: updated }));
+  };
+
+  const addExpBullet = (expIdx) => {
+    const updated = [...resumeData.experience];
+    updated[expIdx].bullets.push("New impact bullet point highlighting technical achievement.");
+    setResumeData(prev => ({ ...prev, experience: updated }));
+  };
+
+  const removeExpBullet = (expIdx, bulletIdx) => {
+    const updated = [...resumeData.experience];
+    updated[expIdx].bullets.splice(bulletIdx, 1);
+    setResumeData(prev => ({ ...prev, experience: updated }));
+  };
+
+  const addExperience = () => {
+    setResumeData(prev => ({
+      ...prev,
+      experience: [
+        ...prev.experience,
+        {
+          id: `exp_${Date.now()}`,
+          company: "Company Name",
+          title: "Job Title / Role",
+          dates: "Month Year – Month Year",
+          location: "City, State",
+          bullets: ["Key accomplishment using technology with quantified results."]
+        }
+      ]
+    }));
+  };
+
+  const removeExperience = (idx) => {
+    const updated = [...resumeData.experience];
+    updated.splice(idx, 1);
+    setResumeData(prev => ({ ...prev, experience: updated }));
+  };
+
+  const handleProjChange = (idx, field, val) => {
+    const updated = [...resumeData.projects];
+    updated[idx][field] = val;
+    setResumeData(prev => ({ ...prev, projects: updated }));
+  };
+
+  const handleProjBulletChange = (projIdx, bulletIdx, val) => {
+    const updated = [...resumeData.projects];
+    updated[projIdx].bullets[bulletIdx] = val;
+    setResumeData(prev => ({ ...prev, projects: updated }));
+  };
+
+  const addProjBullet = (projIdx) => {
+    const updated = [...resumeData.projects];
+    updated[projIdx].bullets.push("Developed feature using technology stack to optimize performance.");
+    setResumeData(prev => ({ ...prev, projects: updated }));
+  };
+
+  const removeProjBullet = (projIdx, bulletIdx) => {
+    const updated = [...resumeData.projects];
+    updated[projIdx].bullets.splice(bulletIdx, 1);
+    setResumeData(prev => ({ ...prev, projects: updated }));
+  };
+
+  const addProject = () => {
+    setResumeData(prev => ({
+      ...prev,
+      projects: [
+        ...prev.projects,
+        {
+          id: `proj_${Date.now()}`,
+          name: "Project Title",
+          tech: "Technologies Used",
+          dates: "Month Year",
+          bullets: ["Engineered project functionality using stack."]
+        }
+      ]
+    }));
+  };
+
+  const removeProject = (idx) => {
+    const updated = [...resumeData.projects];
+    updated.splice(idx, 1);
+    setResumeData(prev => ({ ...prev, projects: updated }));
+  };
+
+  const handleSkillChange = (field, val) => {
+    setResumeData(prev => ({
+      ...prev,
+      skills: { ...prev.skills, [field]: val }
+    }));
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 animate-fadeIn">
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <span className="px-3.5 py-1 bg-amber-100 text-amber-800 border border-amber-200 rounded-full text-xs font-bold uppercase tracking-wider">
-          Free Learning Resources
+    <div className="max-w-[1700px] mx-auto px-4 py-8 space-y-6">
+      
+      {/* Top Banner Actions */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl print:hidden">
+        <div>
+          <h1 className="text-xl font-bold text-white flex items-center gap-2">
+            <FileText className="w-5 h-5 text-indigo-400" />
+            Jake's Resume Format Builder
+          </h1>
+          <p className="text-xs text-slate-400">The single-page ATS-optimized standard used by top CS, Engineering & Business graduates worldwide.</p>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button onClick={() => window.print()} className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition">
+            <Printer className="w-4 h-4" /> Print / Save PDF
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* LEFT COLUMN: EDIT FORM CONTROLS */}
+        <div className="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 print:hidden max-h-[85vh] overflow-y-auto custom-scrollbar">
+          
+          {/* Section Navigation Pills */}
+          <div className="flex flex-wrap gap-2 border-b border-slate-800 pb-4">
+            {['personal', 'education', 'coursework', 'experience', 'projects', 'skills'].map(sec => (
+              <button
+                key={sec}
+                onClick={() => setActiveSection(sec)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition ${activeSection === sec ? 'bg-indigo-600 text-white shadow' : 'bg-slate-950 text-slate-400 hover:text-white'}`}
+              >
+                {sec}
+              </button>
+            ))}
+          </div>
+
+          {/* 1. PERSONAL INFO */}
+          {activeSection === 'personal' && (
+            <div className="space-y-4 animate-fadeIn">
+              <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Header & Contact Details</h3>
+              <div className="space-y-3">
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Full Name</label>
+                  <input type="text" value={resumeData.personal.fullName} onChange={(e) => handlePersonalChange('fullName', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                </div>
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Address / Location</label>
+                  <input type="text" value={resumeData.personal.location} onChange={(e) => handlePersonalChange('location', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Phone Number</label>
+                    <input type="text" value={resumeData.personal.phone} onChange={(e) => handlePersonalChange('phone', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Email Address</label>
+                    <input type="text" value={resumeData.personal.email} onChange={(e) => handlePersonalChange('email', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">LinkedIn Link / URL</label>
+                    <input type="text" value={resumeData.personal.linkedin} onChange={(e) => handlePersonalChange('linkedin', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">GitHub Link / URL</label>
+                    <input type="text" value={resumeData.personal.github} onChange={(e) => handlePersonalChange('github', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 2. EDUCATION */}
+          {activeSection === 'education' && (
+            <div className="space-y-4 animate-fadeIn">
+              <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Education Details</h3>
+              {resumeData.education.map((edu, idx) => (
+                <div key={edu.id} className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3">
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">University / Institution</label>
+                    <input type="text" value={edu.institution} onChange={(e) => handleEduChange(idx, 'institution', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                  </div>
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Degree / Major</label>
+                    <input type="text" value={edu.degree} onChange={(e) => handleEduChange(idx, 'degree', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Graduation Dates</label>
+                      <input type="text" value={edu.dates} onChange={(e) => handleEduChange(idx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                    </div>
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">City, State</label>
+                      <input type="text" value={edu.location} onChange={(e) => handleEduChange(idx, 'location', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white focus:border-indigo-500 focus:outline-none" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 3. RELEVANT COURSEWORK */}
+          {activeSection === 'coursework' && (
+            <div className="space-y-4 animate-fadeIn">
+              <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Relevant Coursework</h3>
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Courses (Comma separated)</label>
+                <textarea
+                  rows={4}
+                  value={resumeData.coursework.join(', ')}
+                  onChange={(e) => handleCourseworkChange(e.target.value)}
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none"
+                />
+                <p className="text-[11px] text-slate-500 mt-1">These will format as a 4-column balanced grid under Education in Jake's resume format.</p>
+              </div>
+            </div>
+          )}
+
+          {/* 4. EXPERIENCE */}
+          {activeSection === 'experience' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Work Experience</h3>
+                <button onClick={addExperience} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                  <Plus className="w-3.5 h-3.5" /> Add Role
+                </button>
+              </div>
+
+              {resumeData.experience.map((exp, expIdx) => (
+                <div key={exp.id} className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3 relative group">
+                  <button onClick={() => removeExperience(expIdx)} className="absolute top-3 right-3 text-slate-500 hover:text-rose-400">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Company Name</label>
+                      <input type="text" value={exp.company} onChange={(e) => handleExpChange(expIdx, 'company', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Job Title</label>
+                      <input type="text" value={exp.title} onChange={(e) => handleExpChange(expIdx, 'title', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Dates (e.g. May 2023 – Aug 2023)</label>
+                      <input type="text" value={exp.dates} onChange={(e) => handleExpChange(expIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Location (e.g. City, State)</label>
+                      <input type="text" value={exp.location} onChange={(e) => handleExpChange(expIdx, 'location', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-400">Bullet Points</span>
+                      <button onClick={() => addExpBullet(expIdx)} className="text-[11px] text-indigo-400 hover:underline">+ Add Bullet</button>
+                    </div>
+                    {exp.bullets.map((b, bIdx) => (
+                      <div key={bIdx} className="flex gap-2 items-start">
+                        <textarea
+                          rows={2}
+                          value={b}
+                          onChange={(e) => handleExpBulletChange(expIdx, bIdx, e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 resize-none"
+                        />
+                        <button onClick={() => removeExpBullet(expIdx, bIdx)} className="text-slate-600 hover:text-rose-400 pt-2">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 5. PROJECTS */}
+          {activeSection === 'projects' && (
+            <div className="space-y-6 animate-fadeIn">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Technical Projects</h3>
+                <button onClick={addProject} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                  <Plus className="w-3.5 h-3.5" /> Add Project
+                </button>
+              </div>
+
+              {resumeData.projects.map((proj, projIdx) => (
+                <div key={proj.id} className="p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-3 relative group">
+                  <button onClick={() => removeProject(projIdx)} className="absolute top-3 right-3 text-slate-500 hover:text-rose-400">
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Project Name</label>
+                      <input type="text" value={proj.name} onChange={(e) => handleProjChange(projIdx, 'name', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                    <div>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date (e.g. January 2023)</label>
+                      <input type="text" value={proj.dates} onChange={(e) => handleProjChange(projIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Technologies Used (e.g. Python, Selenium, GCP)</label>
+                    <input type="text" value={proj.tech} onChange={(e) => handleProjChange(projIdx, 'tech', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
+                  </div>
+
+                  <div className="space-y-2 pt-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-slate-400">Bullet Points</span>
+                      <button onClick={() => addProjBullet(projIdx)} className="text-[11px] text-indigo-400 hover:underline">+ Add Bullet</button>
+                    </div>
+                    {proj.bullets.map((b, bIdx) => (
+                      <div key={bIdx} className="flex gap-2 items-start">
+                        <textarea
+                          rows={2}
+                          value={b}
+                          onChange={(e) => handleProjBulletChange(projIdx, bIdx, e.target.value)}
+                          className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-slate-200 resize-none"
+                        />
+                        <button onClick={() => removeProjBullet(projIdx, bIdx)} className="text-slate-600 hover:text-rose-400 pt-2">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* 6. TECHNICAL SKILLS */}
+          {activeSection === 'skills' && (
+            <div className="space-y-4 animate-fadeIn">
+              <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Technical Skills</h3>
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Languages</label>
+                <input type="text" value={resumeData.skills.languages} onChange={(e) => handleSkillChange('languages', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Frameworks</label>
+                <input type="text" value={resumeData.skills.frameworks} onChange={(e) => handleSkillChange('frameworks', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Developer Tools</label>
+                <input type="text" value={resumeData.skills.tools} onChange={(e) => handleSkillChange('tools', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
+              </div>
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Libraries</label>
+                <input type="text" value={resumeData.skills.libraries} onChange={(e) => handleSkillChange('libraries', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
+              </div>
+            </div>
+          )}
+
+        </div>
+
+        {/* RIGHT COLUMN: PIXEL-PERFECT JAKE'S RESUME LIVE PREVIEW */}
+        <div className="lg:col-span-7 bg-white text-slate-950 rounded-lg p-10 shadow-2xl min-h-[1050px] border border-slate-300 font-serif leading-tight print:p-0 print:shadow-none print:border-none" id="resume-preview">
+          
+          {/* HEADER */}
+          <div className="text-center space-y-1 mb-3">
+            <h1 className="text-3xl font-extrabold tracking-wide uppercase font-serif text-black">{resumeData.personal.fullName || "First Last"}</h1>
+            <p className="text-[13px] text-slate-800 font-serif">{resumeData.personal.location}</p>
+            <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] text-slate-900 font-serif pt-0.5">
+              {resumeData.personal.phone && <span>📞 {resumeData.personal.phone}</span>}
+              {resumeData.personal.email && <span>✉ {resumeData.personal.email}</span>}
+              {resumeData.personal.linkedin && <span>🔗 {resumeData.personal.linkedin}</span>}
+              {resumeData.personal.github && <span>💻 {resumeData.personal.github}</span>}
+            </div>
+          </div>
+
+          {/* EDUCATION */}
+          <div className="mb-3">
+            <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Education</h2>
+            {resumeData.education.map((edu) => (
+              <div key={edu.id} className="mb-1.5">
+                <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
+                  <span>{edu.institution}</span>
+                  <span>{edu.dates}</span>
+                </div>
+                <div className="flex justify-between items-baseline text-[12px] italic text-slate-800">
+                  <span>{edu.degree}</span>
+                  <span>{edu.location}</span>
+                </div>
+              </div>
+            ))}
+
+            {/* RELEVANT COURSEWORK GRID */}
+            {resumeData.coursework.length > 0 && (
+              <div className="mt-2 text-[12px] text-slate-900">
+                <span className="font-bold block mb-1">Relevant Coursework:</span>
+                <div className="grid grid-cols-4 gap-x-2 gap-y-0.5 pl-3">
+                  {resumeData.coursework.map((course, cIdx) => (
+                    <div key={cIdx} className="text-[11.5px]">• {course}</div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* EXPERIENCE */}
+          {resumeData.experience.length > 0 && (
+            <div className="mb-3">
+              <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Experience</h2>
+              {resumeData.experience.map((exp) => (
+                <div key={exp.id} className="mb-2.5">
+                  <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
+                    <span>{exp.company}</span>
+                    <span>{exp.dates}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline text-[12px] italic text-slate-800 mb-1">
+                    <span>{exp.title}</span>
+                    <span>{exp.location}</span>
+                  </div>
+                  <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug">
+                    {exp.bullets.map((b, bIdx) => (
+                      <li key={bIdx}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* PROJECTS */}
+          {resumeData.projects.length > 0 && (
+            <div className="mb-3">
+              <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Projects</h2>
+              {resumeData.projects.map((proj) => (
+                <div key={proj.id} className="mb-2">
+                  <div className="flex justify-between items-baseline text-[12.5px] text-black">
+                    <div>
+                      <span className="font-bold">{proj.name}</span>
+                      {proj.tech && <span className="italic font-normal"> | {proj.tech}</span>}
+                    </div>
+                    <span className="font-bold text-[12px]">{proj.dates}</span>
+                  </div>
+                  <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug mt-0.5">
+                    {proj.bullets.map((b, bIdx) => (
+                      <li key={bIdx}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* TECHNICAL SKILLS */}
+          <div>
+            <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills</h2>
+            <div className="text-[12px] text-slate-900 space-y-1">
+              {resumeData.skills.languages && (
+                <div><strong className="font-bold text-black">Languages:</strong> {resumeData.skills.languages}</div>
+              )}
+              {resumeData.skills.frameworks && (
+                <div><strong className="font-bold text-black">Frameworks:</strong> {resumeData.skills.frameworks}</div>
+              )}
+              {resumeData.skills.tools && (
+                <div><strong className="font-bold text-black">Developer Tools:</strong> {resumeData.skills.tools}</div>
+              )}
+              {resumeData.skills.libraries && (
+                <div><strong className="font-bold text-black">Libraries:</strong> {resumeData.skills.libraries}</div>
+              )}
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// 2. PDF / RESUME UPLOAD ATS CHECKER SUITE
+// -------------------------------------------------------------
+function AtsCheckerSuite({ resumeData, showToast }) {
+  const [jdText, setJdText] = useState("");
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [isScanning, setIsScanning] = useState(false);
+  const [analysis, setAnalysis] = useState(null);
+  const fileInputRef = useRef(null);
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploadedFile(file);
+      showToast(`Uploaded: ${file.name}`);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      setUploadedFile(file);
+      showToast(`Uploaded: ${file.name}`);
+    }
+  };
+
+  const runAnalysis = () => {
+    if (!uploadedFile && !jdText) {
+      showToast("Please upload a PDF or paste a Job Description first.");
+      return;
+    }
+
+    setIsScanning(true);
+    setTimeout(() => {
+      setIsScanning(false);
+      setAnalysis({
+        score: 86,
+        totalKeywords: 18,
+        matchedKeywords: ["Python", "React", "SQL", "Git", "Docker", "REST APIs", "Node.js"],
+        missingKeywords: ["AWS Lambda", "Kubernetes", "GraphQL", "CI/CD Pipeline"],
+        formattingScore: 95,
+        recommendations: [
+          "Format matches 95%+ of ATS recruiters' preferred single-column layout.",
+          "Add 2 missing hard skills directly in your Technical Skills section.",
+          "Quantify bullet points with quantifiable percentage impacts (e.g., 'Reduced latency by 30%')."
+        ]
+      });
+      showToast("ATS Audit complete!");
+    }, 1500);
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto px-4 py-10 space-y-8 animate-fadeIn">
+      <div className="text-center space-y-3">
+        <span className="px-3 py-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
+          PDF & Resume ATS Scanner
         </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">Placement Notes & Cheat Sheets</h1>
-        <p className="text-xs sm:text-sm text-slate-600">Curated notes, formula sheets, and interview roadmaps for CS & Core engineering drives.</p>
+        <h1 className="text-3xl sm:text-4xl font-extrabold text-white">Upload Resume & Check Job Match Score</h1>
+        <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">Upload your PDF/DOCX resume or parse directly from Jake's Builder to match against target job descriptions.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {categories.map((cat, idx) => (
-          <div key={idx} className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-lg hover:-translate-y-1 transition duration-300">
-            <div className="flex items-center justify-between">
-              <span className={`px-3 py-1 rounded-full text-[11px] font-bold border ${cat.color}`}>{cat.tag}</span>
-              <BookOpen className="w-5 h-5 text-slate-400" />
+        
+        {/* PDF UPLOADER BOX */}
+        <div 
+          onDragOver={(e) => e.preventDefault()}
+          onDrop={handleDrop}
+          onClick={() => fileInputRef.current.click()}
+          className="bg-slate-900/80 border-2 border-dashed border-slate-700 hover:border-indigo-500 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition group"
+        >
+          <input ref={fileInputRef} type="file" accept=".pdf,.docx,.doc" onChange={handleFileUpload} className="hidden" />
+          <div className="w-14 h-14 rounded-2xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+            <Upload className="w-7 h-7" />
+          </div>
+          {uploadedFile ? (
+            <div className="space-y-1">
+              <span className="text-xs font-bold text-emerald-400 flex items-center gap-1">
+                <CheckCircle className="w-4 h-4" /> Ready for ATS Analysis
+              </span>
+              <p className="text-sm font-semibold text-white">{uploadedFile.name}</p>
+              <p className="text-[11px] text-slate-400">{(uploadedFile.size / 1024).toFixed(1)} KB • Click to replace</p>
             </div>
-            <h3 className="text-xl font-extrabold text-slate-900">{cat.title}</h3>
-            <ul className="space-y-2.5 text-xs text-slate-700">
-              {cat.topics.map((t, i) => (
-                <li key={i} className="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200/60 hover:bg-indigo-50/50 transition cursor-pointer" onClick={() => showToast(`Opening ${t}...`)}>
-                  <span className="font-semibold flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" /> {t}
+          ) : (
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-white">Drag & Drop your Resume PDF here</p>
+              <p className="text-xs text-slate-400">Supports .PDF, .DOCX (Up to 10MB)</p>
+              <span className="inline-block mt-3 text-xs font-bold text-indigo-400 underline">Browse File</span>
+            </div>
+          )}
+        </div>
+
+        {/* JOB DESCRIPTION INPUT */}
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col space-y-3">
+          <label className="text-xs font-bold uppercase text-slate-300 tracking-wider flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-indigo-400" />
+            Paste Target Job Description (JD)
+          </label>
+          <textarea
+            rows={6}
+            value={jdText}
+            onChange={(e) => setJdText(e.target.value)}
+            placeholder="Paste job description keywords, requirements, or tech stack here..."
+            className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+
+      </div>
+
+      <button
+        onClick={runAnalysis}
+        disabled={isScanning}
+        className="w-full py-4 bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2 transition"
+      >
+        {isScanning ? (
+          <>
+            <RefreshCw className="w-5 h-5 animate-spin" /> Scanning Keywords & Formatting...
+          </>
+        ) : (
+          <>
+            <Zap className="w-5 h-5" /> Calculate ATS Match Score
+          </>
+        )}
+      </button>
+
+      {/* ANALYSIS RESULTS BOARD */}
+      {analysis && (
+        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 animate-fadeIn">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-6">
+            <div>
+              <h3 className="text-xl font-bold text-white">ATS Audit Breakdown</h3>
+              <p className="text-xs text-slate-400">Compared against ATS parsing guidelines for Software & Engineering roles.</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <div className="text-center">
+                <span className="text-3xl font-black text-emerald-400">{analysis.score}%</span>
+                <span className="text-[10px] uppercase block text-slate-400 font-bold">Match Score</span>
+              </div>
+              <div className="text-center border-l border-slate-800 pl-4">
+                <span className="text-3xl font-black text-indigo-400">{analysis.formattingScore}%</span>
+                <span className="text-[10px] uppercase block text-slate-400 font-bold">Format Score</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-3 bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+              <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-2">
+                <CheckCircle className="w-4 h-4" /> Matched Keywords ({analysis.matchedKeywords.length})
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {analysis.matchedKeywords.map((kw, i) => (
+                  <span key={i} className="px-2.5 py-1 bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 rounded-lg text-xs font-medium">
+                    {kw}
                   </span>
-                  <ExternalLink className="w-4 h-4 text-slate-400" />
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-3 bg-slate-950/50 p-4 rounded-xl border border-slate-800">
+              <h4 className="text-xs font-bold text-rose-400 uppercase tracking-wider flex items-center gap-2">
+                <AlertCircle className="w-4 h-4" /> Missing Keywords ({analysis.missingKeywords.length})
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                {analysis.missingKeywords.map((kw, i) => (
+                  <span key={i} className="px-2.5 py-1 bg-rose-500/10 text-rose-300 border border-rose-500/30 rounded-lg text-xs font-medium">
+                    + {kw}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2 pt-2">
+            <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wider">Actionable ATS Recommendations</h4>
+            <ul className="space-y-2">
+              {analysis.recommendations.map((rec, idx) => (
+                <li key={idx} className="text-xs text-slate-300 flex items-start gap-2 bg-slate-950 p-3 rounded-lg border border-slate-800/80">
+                  <ArrowRight className="w-4 h-4 text-indigo-400 flex-shrink-0 mt-0.5" />
+                  <span>{rec}</span>
                 </li>
               ))}
             </ul>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
 
 // -------------------------------------------------------------
-// 2. PEER REFERRAL & WORKPLACE NETWORK HUB
+// 3. CAMPUS AMBASSADOR APPLICATION & ECOSYSTEM PORTAL
 // -------------------------------------------------------------
-function ReferralNetworkHub({ showToast, setAuthModal }) {
-  const listings = [
-    { company: "Google", role: "Software Engineering Intern / FTE", location: "Bengaluru", referrer: "Alumni @ NITK", badge: "Tech" },
-    { company: "CSIR-NAL", role: "Aerodynamics & CFD Research Fellow", location: "Bengaluru", referrer: "Research Associate", badge: "Core" },
-    { company: "Tata Steel", role: "Graduate Engineer Trainee (GET)", location: "Jamshedpur", referrer: "Supply Chain Lead", badge: "Core" },
-    { company: "Microsoft", role: "SDE 1 - Cloud & AI", location: "Hyderabad", referrer: "Senior SDE", badge: "Tech" }
-  ];
-
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10 animate-fadeIn">
-      <div className="text-center space-y-3 max-w-2xl mx-auto">
-        <span className="px-3.5 py-1 bg-sky-100 text-sky-800 border border-sky-200 rounded-full text-xs font-bold uppercase tracking-wider">
-          Student Network & Alumni
-        </span>
-        <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">Peer Job & Internship Referrals</h1>
-        <p className="text-xs sm:text-sm text-slate-600">Connect with verified seniors and alumni to get referred directly for campus & off-campus drives.</p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {listings.map((item, idx) => (
-          <div key={idx} className="bg-white border border-slate-200 rounded-3xl p-6 space-y-4 shadow-sm hover:shadow-lg transition">
-            <div className="flex items-center justify-between">
-              <span className="px-3 py-1 bg-slate-100 text-slate-800 rounded-full text-xs font-bold">{item.badge}</span>
-              <span className="text-xs font-semibold text-slate-500">{item.location}</span>
-            </div>
-            <div>
-              <h3 className="text-xl font-black text-slate-900">{item.company}</h3>
-              <p className="text-sm font-semibold text-indigo-600">{item.role}</p>
-              <p className="text-xs text-slate-500 mt-1">Shared by: {item.referrer}</p>
-            </div>
-            <button 
-              onClick={() => { showToast("Referral request initiated!"); setAuthModal('signup'); }}
-              className="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-2"
-            >
-              <Share2 className="w-4 h-4" /> Request Referral
-            </button>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-// -------------------------------------------------------------
-// SIGN IN / SIGN UP MODAL COMPONENT
-// -------------------------------------------------------------
-function AuthModal({ type, onClose, showToast }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [name, setName] = useState('');
+function CampusEcosystemView({ showToast }) {
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    college: "",
+    yearOfStudy: "3rd Year",
+    branch: "Computer Science",
+    linkedin: "",
+    whyApply: ""
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    showToast(type === 'signin' ? "Successfully signed in!" : "Account created successfully!");
-    onClose();
+    if (!formData.fullName || !formData.email || !formData.college) {
+      showToast("Please fill in required fields.");
+      return;
+    }
+    setSubmitted(true);
+    showToast("Application Submitted Successfully!");
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative animate-fadeIn">
-        <button onClick={onClose} className="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
-          <X className="w-5 h-5" />
-        </button>
+    <div className="max-w-5xl mx-auto px-4 py-12 space-y-12 animate-fadeIn">
+      
+      {/* HEADER HERO */}
+      <div className="text-center space-y-4 max-w-2xl mx-auto">
+        <span className="px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
+          Student Leadership & Placements
+        </span>
+        <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight">Become a Campus Lead / Ambassador</h1>
+        <p className="text-xs sm:text-sm text-slate-400">Lead ATS resume workshops, help students prepare for top tier engineering campus placements, and unlock exclusive perks.</p>
+      </div>
 
-        <div className="space-y-1 text-center">
-          <h2 className="text-2xl font-black text-slate-900">{type === 'signin' ? "Welcome Back" : "Create Account"}</h2>
-          <p className="text-xs text-slate-500">Access saved resumes, notes, and referral networks</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {type === 'signup' && (
-            <div>
-              <label className="text-xs font-bold text-slate-700 block mb-1">Full Name</label>
-              <input type="text" required value={name} onChange={(e) => setName(e.target.value)} placeholder="Student Name" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs" />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* LEFT: FORM */}
+        <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
+          {submitted ? (
+            <div className="text-center py-12 space-y-4 animate-fadeIn">
+              <div className="w-16 h-16 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center justify-center mx-auto">
+                <CheckCircle className="w-8 h-8" />
+              </div>
+              <h3 className="text-2xl font-bold text-white">Application Received!</h3>
+              <p className="text-xs text-slate-400 max-w-md mx-auto">Our campus team will review your application for <strong>{formData.college}</strong> and reach out via email within 48 hours.</p>
+              <button onClick={() => setSubmitted(false)} className="px-4 py-2 bg-slate-800 text-xs font-bold text-slate-200 rounded-xl hover:bg-slate-700">Submit Another</button>
             </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <h3 className="text-sm font-bold uppercase text-indigo-400 tracking-wider">Campus Ambassador Application Form</h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Full Name *</label>
+                  <input type="text" required value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="John Doe" />
+                </div>
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Student Email *</label>
+                  <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="student@university.edu" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">University / College Name *</label>
+                  <input type="text" required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="NIT, IIT, State University..." />
+                </div>
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Phone Number</label>
+                  <input type="text" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="+91 9876543210" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Year of Study</label>
+                  <select value={formData.yearOfStudy} onChange={(e) => setFormData({ ...formData, yearOfStudy: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500">
+                    <option>1st Year</option>
+                    <option>2nd Year</option>
+                    <option>3rd Year</option>
+                    <option>4th Year / Final Year</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="text-slate-400 text-xs block mb-1 font-semibold">Branch / Degree</label>
+                  <input type="text" value={formData.branch} onChange={(e) => setFormData({ ...formData, branch: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="CSE, ECE, Mechanical..." />
+                </div>
+              </div>
+
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">LinkedIn Profile URL</label>
+                <input type="text" value={formData.linkedin} onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="linkedin.com/in/username" />
+              </div>
+
+              <div>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Why do you want to lead Aspiraa workshops on your campus?</label>
+                <textarea rows={3} value={formData.whyApply} onChange={(e) => setFormData({ ...formData, whyApply: e.target.value })} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white focus:outline-none focus:border-indigo-500" placeholder="Tell us about student clubs or placement activities you participate in..." />
+              </div>
+
+              <button type="submit" className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 font-bold text-xs uppercase tracking-wider text-white rounded-xl shadow-lg transition flex items-center justify-center gap-2">
+                <Send className="w-4 h-4" /> Submit Application
+              </button>
+            </form>
           )}
-          <div>
-            <label className="text-xs font-bold text-slate-700 block mb-1">Email</label>
-            <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="student@college.edu" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs" />
-          </div>
-          <div>
-            <label className="text-xs font-bold text-slate-700 block mb-1">Password</label>
-            <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs" />
-          </div>
-          <button type="submit" className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition">
-            {type === 'signin' ? "Sign In" : "Get Started Free"}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
-}
+        </div>
 
-// -------------------------------------------------------------
-// HERO LANDING PAGE VIEW
-// -------------------------------------------------------------
-function HeroLandingView({ navigateTo, setAuthModal }) {
-  return (
-    <div className="space-y-20 pb-20 animate-fadeIn">
-      <section className="pt-20 pb-16 border-b border-slate-200/80 bg-gradient-to-b from-white via-indigo-50/20 to-white relative overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold shadow-sm">
-            <Sparkles className="w-4 h-4 text-indigo-600 animate-spin" />
-            <span>Complete Placement Preparation & Career OS</span>
+        {/* RIGHT: LEADERBOARD & PERKS */}
+        <div className="lg:col-span-5 space-y-6">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <h3 className="text-sm font-bold uppercase text-indigo-400 tracking-wider flex items-center gap-2">
+              <Award className="w-4 h-4 text-amber-400" /> Ambassador Perks & Benefits
+            </h3>
+            <ul className="space-y-3 text-xs text-slate-300">
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <span><strong>Official Certificate:</strong> Leadership credential recognized for campus placements & LinkedIn.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <span><strong>Premium Access:</strong> Free access to all ATS Premium resume templates and AI checkers.</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Check className="w-4 h-4 text-emerald-400 flex-shrink-0 mt-0.5" />
+                <span><strong>Stipend & Rewards:</strong> Performance bonuses for hosting student ATS resume drives.</span>
+              </li>
+            </ul>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.12] max-w-4xl mx-auto">
-            Build ATS Resumes & <br />
-            <span className="bg-gradient-to-r from-indigo-600 via-sky-600 to-indigo-700 bg-clip-text text-transparent">Crack Engineering Placements.</span>
-          </h1>
-
-          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            From Jake's ATS Resume Studio to curated CS/Core course notes and peer job referrals—everything you need for campus placement drives.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
-            <button onClick={() => navigateTo('builder')} className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition">
-              <span>Launch Resume Builder</span> <ArrowRight className="w-4 h-4" />
-            </button>
-            <button onClick={() => navigateTo('notes')} className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold text-sm shadow-md flex items-center justify-center gap-2 transition">
-              <BookOpen className="w-4 h-4 text-amber-500" /> <span>Browse Placement Notes</span>
-            </button>
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
+            <h3 className="text-sm font-bold uppercase text-indigo-400 tracking-wider flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-amber-400" /> Active Campus Leaders
+            </h3>
+            <div className="space-y-3">
+              {[
+                { name: "Rahul S.", college: "NITK Surathkal", students: "240+ Resumes Built" },
+                { name: "Ananya P.", college: "IIT Madras", students: "190+ Resumes Built" },
+                { name: "Vikram R.", college: "BITS Pilani", students: "150+ Resumes Built" }
+              ].map((lead, idx) => (
+                <div key={idx} className="flex items-center justify-between p-3 bg-slate-950 rounded-xl border border-slate-800">
+                  <div>
+                    <span className="text-xs font-bold text-white block">{lead.name}</span>
+                    <span className="text-[11px] text-slate-400">{lead.college}</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/20">{lead.students}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </section>
-    </div>
-  );
-}
 
-// -------------------------------------------------------------
-// RESUME STUDIO, ATS & CAMPUS COMPONENTS (RETAINED & UNTOUCHED)
-// -------------------------------------------------------------
-function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSelectedTemplate, showToast }) {
-  return (
-    <div className="max-w-[1700px] mx-auto px-4 py-6 space-y-6">
-      <div className="bg-white border border-slate-200 p-5 rounded-2xl shadow-sm flex justify-between items-center">
-        <h1 className="text-lg font-black text-slate-900 flex items-center gap-2">
-          <FileText className="w-5 h-5 text-indigo-600" /> Resume Studio
-        </h1>
-        <button onClick={() => window.print()} className="px-5 py-2 rounded-xl bg-emerald-600 text-white font-bold text-xs flex items-center gap-2">
-          <Printer className="w-4 h-4" /> Print PDF
-        </button>
-      </div>
-      <div className="bg-white p-10 rounded-2xl border border-slate-200 shadow-lg min-h-[900px]">
-        <JakesClassicPreview resumeData={resumeData} />
-      </div>
-    </div>
-  );
-}
-
-function JakesClassicPreview({ resumeData }) {
-  return (
-    <div className="font-serif leading-tight">
-      <div className="text-center space-y-1 mb-3">
-        <h1 className="text-3xl font-extrabold uppercase text-black">{resumeData.personal.fullName}</h1>
-        <p className="text-[13px] text-slate-800">{resumeData.personal.location} | {resumeData.personal.email} | {resumeData.personal.phone}</p>
-      </div>
-      <div className="mb-3">
-        <h2 className="text-[14px] font-bold uppercase text-black border-b border-black pb-0.5 mb-1.5">Education</h2>
-        {resumeData.education.map((edu) => (
-          <div key={edu.id} className="mb-1 text-[13px]">
-            <div className="flex justify-between font-bold"><span>{edu.institution}</span><span>{edu.dates}</span></div>
-            <div className="italic text-slate-800">{edu.degree} in {edu.branch} (CGPA: {edu.cgpa})</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function AtsCheckerSuite({ showToast }) {
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-10 space-y-6">
-      <h1 className="text-3xl font-black text-slate-900 text-center">ATS Audit Scanner</h1>
-      <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center">
-        <Upload className="w-12 h-12 text-indigo-600 mx-auto mb-3" />
-        <p className="text-sm font-bold">Drag & Drop Resume PDF to parse ATS Keywords</p>
-      </div>
-    </div>
-  );
-}
-
-function CampusEcosystemView({ showToast }) {
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-10 space-y-6">
-      <h1 className="text-3xl font-black text-slate-900 text-center">Campus Ambassador Network</h1>
-      <div className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm text-center">
-        <p className="text-sm text-slate-600">Apply to become a student leader and host ATS resume drives at your institution.</p>
       </div>
     </div>
   );
