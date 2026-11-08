@@ -1,9 +1,9 @@
- import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
-  Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
-  GraduationCap, RefreshCw, Trophy, Send, CheckCircle, AlertCircle, Printer, Eye,
-  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, BookOpen, Share2, ExternalLink, LogOut, Smartphone, Monitor
+  Briefcase, ArrowRight, Zap, Menu, X, Plus, Trash2,
+  GraduationCap, RefreshCw, Send, CheckCircle, AlertCircle, Printer, Eye,
+  Upload, Check, Layout, LogIn, UserPlus, BookOpen, Share2, ExternalLink, LogOut, Smartphone
 } from 'lucide-react';
 
 // Firebase modular SDK imports
@@ -1675,7 +1675,7 @@ function CampusEcosystemView({ showToast }) {
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-white border border-slate-200/80 rounded-3xl p-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-bold uppercase text-indigo-600 tracking-wider flex items-center gap-2">
-              <Award className="w-4 h-4 text-amber-500" /> Lead Privileges
+              <Check className="w-4 h-4 text-amber-500" /> Lead Privileges
             </h3>
             <ul className="space-y-3 text-xs text-slate-700">
               <li className="flex items-start gap-2">
