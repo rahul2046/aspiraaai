@@ -138,7 +138,7 @@ export default function App() {
               className={`px-3 py-2 rounded-xl transition flex items-center gap-1.5 ${activeTab === 'builder' ? 'text-indigo-600 bg-indigo-50/80 font-bold shadow-sm' : 'hover:text-slate-900 hover:bg-slate-100'}`}
             >
               <FileText className="w-4 h-4 text-indigo-600" />
-              Resume Builder
+              Resume Studio
             </button>
             <button 
               onClick={() => navigateTo('ats')} 
@@ -197,7 +197,7 @@ export default function App() {
         {mobileMenuOpen && (
           <div className="lg:hidden border-b border-slate-200 bg-white/95 px-4 pt-2 pb-6 space-y-2 text-sm font-medium animate-fadeIn">
             <button onClick={() => navigateTo('landing')} className="block w-full text-left px-3 py-2 rounded-xl bg-slate-100 font-bold text-slate-900">Home</button>
-            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700">Resume Builder</button>
+            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700">Resume Studio</button>
             <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700">ATS Audit Scanner</button>
             <button onClick={() => navigateTo('notes')} className="block w-full text-left px-3 py-2 rounded-xl text-amber-600 font-bold">Course Notes & Roadmaps</button>
             <button onClick={() => navigateTo('referrals')} className="block w-full text-left px-3 py-2 rounded-xl text-sky-600 font-bold">Peer Referral Network</button>
@@ -289,7 +289,7 @@ function AuthModal({ type, onClose, showToast }) {
 }
 
 // -------------------------------------------------------------
-// HERO LANDING PAGE VIEW
+// HERO LANDING PAGE VIEW (PUNCHY CONCEPT 1 HEADLINE)
 // -------------------------------------------------------------
 function HeroLandingView({ navigateTo, setAuthModal }) {
   return (
@@ -301,18 +301,21 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
             <span>Complete Placement Preparation & Career OS</span>
           </div>
 
+          {/* PUNCHY HEADLINE WITHOUT "RESUME" */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.12] max-w-4xl mx-auto">
-            Build ATS Resumes & <br />
-            <span className="bg-gradient-to-r from-indigo-600 via-sky-600 to-indigo-700 bg-clip-text text-transparent">Land Engineering Placements.</span>
+            Stop Getting Ghosted by Recruiters. <br />
+            <span className="bg-gradient-to-r from-indigo-600 via-sky-600 to-indigo-700 bg-clip-text text-transparent">
+              Land 10x More Placement Offers.
+            </span>
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            From recruiter-proven Jake's ATS Resume Studio to curated CS/Core course notes and peer job referrals—everything you need for campus placement drives.
+            Bypass bot filters, audit missing job description keywords, master core CS & engineering notes, and unlock peer referrals—all in one open-source platform.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button onClick={() => navigateTo('builder')} className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-sm shadow-xl flex items-center justify-center gap-2 transition transform hover:-translate-y-1">
-              <span>Launch Resume Builder</span> <ArrowRight className="w-4 h-4" />
+              <span>Start Application Audit</span> <ArrowRight className="w-4 h-4" />
             </button>
             <button onClick={() => navigateTo('notes')} className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300 font-bold text-sm shadow-md flex items-center justify-center gap-2 transition">
               <BookOpen className="w-4 h-4 text-amber-500" /> <span>Browse Placement Notes</span>
@@ -1210,7 +1213,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
         <span className="px-3.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200/80 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
           PDF & Resume ATS Scanner
         </span>
-        <h1 className="text-3xl sm:text-4xl font-black text-slate-900">Upload Resume & Check Match Score</h1>
+        <h1 className="text-3xl sm:text-4xl font-black text-slate-900">Upload Application & Check Match Score</h1>
         <p className="text-xs sm:text-sm text-slate-600 max-w-xl mx-auto">Upload your PDF resume or parse directly against target job descriptions.</p>
       </div>
 
@@ -1558,4 +1561,4 @@ function CampusEcosystemView({ showToast }) {
       </div>
     </div>
   );
-}  
+}
