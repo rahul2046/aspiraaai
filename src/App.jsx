@@ -1,10 +1,50 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
   GraduationCap, RefreshCw, Trophy, Send, CheckCircle, AlertCircle, Printer, Eye,
-  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, BookOpen, Share2, ExternalLink
+  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, BookOpen, Share2, ExternalLink, LogOut, Smartphone, Desktop
 } from 'lucide-react';
+
+// Firebase modular SDK imports
+import { initializeApp } from 'firebase/app';
+import { 
+  getAuth, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut, 
+  onAuthStateChanged,
+  updateProfile
+} from 'firebase/auth';
+import { getAnalytics } from 'firebase/analytics';
+
+// -------------------------------------------------------------
+// FIREBASE CONFIGURATION (Loaded dynamically from Vite/Vercel Env)
+// -------------------------------------------------------------
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider();
+
+// Safe initialization for Analytics in browser environment
+if (typeof window !== 'undefined') {
+  try {
+    getAnalytics(app);
+  } catch (err) {
+    console.warn("Firebase Analytics warning:", err);
+  }
+}
 
 const INITIAL_RESUME_DATA = {
   personal: {
@@ -80,13 +120,41 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('landing');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authModal, setAuthModal] = useState(null); // 'signin' | 'signup' | null
+  const [currentUser, setCurrentUser] = useState(null);
   const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
   const [selectedTemplate, setSelectedTemplate] = useState('jakes'); // 'jakes' | 'modern' | 'executive'
   const [toastMessage, setToastMessage] = useState(null);
 
+  // Sync user profile with state upon login/logout
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setCurrentUser(user);
+      if (user) {
+        setResumeData(prev => ({
+          ...prev,
+          personal: {
+            ...prev.personal,
+            fullName: user.displayName || prev.personal.fullName,
+            email: user.email || prev.personal.email
+          }
+        }));
+      }
+    });
+    return () => unsubscribe();
+  }, []);
+
   const showToast = (msg) => {
     setToastMessage(msg);
     setTimeout(() => setToastMessage(null), 3500);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      showToast("Signed out successfully!");
+    } catch (err) {
+      showToast(err.message || "Failed to sign out");
+    }
   };
 
   const navigateTo = (tab) => {
@@ -100,13 +168,13 @@ export default function App() {
       
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-indigo-500/30 animate-bounce">
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-indigo-500/30 animate-bounce max-w-xs sm:max-w-md">
           <Sparkles className="w-5 h-5 text-amber-300 flex-shrink-0 animate-spin" />
-          <span className="text-sm font-semibold">{toastMessage}</span>
+          <span className="text-xs sm:text-sm font-semibold">{toastMessage}</span>
         </div>
       )}
 
-      {/* AUTH MODAL (SIGN IN / SIGN UP) */}
+      {/* AUTH MODAL (SIGN IN / SIGN UP / GOOGLE) */}
       {authModal && (
         <AuthModal type={authModal} onClose={() => setAuthModal(null)} showToast={showToast} />
       )}
@@ -171,20 +239,45 @@ export default function App() {
           </nav>
 
           <div className="hidden sm:flex items-center gap-3">
-            <button 
-              onClick={() => setAuthModal('signin')}
-              className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-indigo-600 transition flex items-center gap-1.5"
-            >
-              <LogIn className="w-4 h-4 text-slate-500" />
-              Sign In
-            </button>
-            <button 
-              onClick={() => setAuthModal('signup')}
-              className="px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-1.5"
-            >
-              <UserPlus className="w-4 h-4" />
-              Sign Up Free
-            </button>
+            {currentUser ? (
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200">
+                  {currentUser.photoURL ? (
+                    <img src={currentUser.photoURL} alt="Avatar" className="w-6 h-6 rounded-full" />
+                  ) : (
+                    <div className="w-6 h-6 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-[10px]">
+                      {(currentUser.displayName || currentUser.email || 'U')[0].toUpperCase()}
+                    </div>
+                  )}
+                  <span className="text-xs font-bold text-slate-800 max-w-[100px] truncate">
+                    {currentUser.displayName || currentUser.email.split('@')[0]}
+                  </span>
+                </div>
+                <button 
+                  onClick={handleSignOut}
+                  className="px-3 py-1.5 text-xs font-bold text-rose-600 hover:bg-rose-50 rounded-xl transition flex items-center gap-1"
+                >
+                  <LogOut className="w-4 h-4" /> Sign Out
+                </button>
+              </div>
+            ) : (
+              <>
+                <button 
+                  onClick={() => setAuthModal('signin')}
+                  className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-indigo-600 transition flex items-center gap-1.5"
+                >
+                  <LogIn className="w-4 h-4 text-slate-500" />
+                  Sign In
+                </button>
+                <button 
+                  onClick={() => setAuthModal('signup')}
+                  className="px-4 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5 flex items-center gap-1.5"
+                >
+                  <UserPlus className="w-4 h-4" />
+                  Sign Up Free
+                </button>
+              </>
+            )}
           </div>
 
           <div className="lg:hidden flex items-center gap-2">
@@ -202,9 +295,20 @@ export default function App() {
             <button onClick={() => navigateTo('notes')} className="block w-full text-left px-3 py-2 rounded-xl text-amber-600 font-bold">Course Notes & Roadmaps</button>
             <button onClick={() => navigateTo('referrals')} className="block w-full text-left px-3 py-2 rounded-xl text-sky-600 font-bold">Peer Referral Network</button>
             <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded-xl text-indigo-600 font-bold">Campus Ambassador</button>
-            <div className="pt-2 flex gap-2">
-              <button onClick={() => setAuthModal('signin')} className="w-1/2 py-2.5 text-xs font-bold border border-slate-300 rounded-xl text-slate-800">Sign In</button>
-              <button onClick={() => setAuthModal('signup')} className="w-1/2 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-xl shadow-md">Sign Up</button>
+            <div className="pt-2">
+              {currentUser ? (
+                <div className="space-y-2">
+                  <div className="px-3 py-2 bg-slate-100 rounded-xl font-bold text-xs text-slate-800 truncate">
+                    Signed in as: {currentUser.email}
+                  </div>
+                  <button onClick={handleSignOut} className="w-full py-2.5 text-xs font-bold bg-rose-50 text-rose-600 rounded-xl">Sign Out</button>
+                </div>
+              ) : (
+                <div className="flex gap-2">
+                  <button onClick={() => setAuthModal('signin')} className="w-1/2 py-2.5 text-xs font-bold border border-slate-300 rounded-xl text-slate-800">Sign In</button>
+                  <button onClick={() => setAuthModal('signup')} className="w-1/2 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-xl shadow-md">Sign Up</button>
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -236,35 +340,98 @@ export default function App() {
 }
 
 // -------------------------------------------------------------
-// SIGN IN / SIGN UP MODAL COMPONENT
+// FIREBASE AUTH MODAL (GOOGLE SIGN-IN + EMAIL/PASSWORD)
 // -------------------------------------------------------------
 function AuthModal({ type, onClose, showToast }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSubmit = (e) => {
+  const handleGoogleSignIn = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      await signInWithPopup(auth, googleProvider);
+      showToast("Signed in with Google successfully!");
+      onClose();
+    } catch (err) {
+      setError(err.message || "Google sign-in failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    showToast(type === 'signin' ? "Successfully signed in!" : "Account created successfully!");
-    onClose();
+    setLoading(true);
+    setError(null);
+
+    try {
+      if (type === 'signup') {
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        if (name && userCredential.user) {
+          await updateProfile(userCredential.user, { displayName: name });
+        }
+        showToast("Account created successfully!");
+      } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        showToast("Successfully signed in!");
+      }
+      onClose();
+    } catch (err) {
+      setError(err.message || "Authentication failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative animate-fadeIn">
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-5 relative animate-fadeIn">
         <button onClick={onClose} className="absolute top-5 right-5 text-slate-400 hover:text-slate-700">
           <X className="w-5 h-5" />
         </button>
 
         <div className="space-y-1 text-center">
-          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3">
+          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-2">
             <UserCheck className="w-6 h-6" />
           </div>
           <h2 className="text-2xl font-black text-slate-900">{type === 'signin' ? "Welcome Back to Aspiraa" : "Create Free Account"}</h2>
           <p className="text-xs text-slate-500">Access saved resumes, notes, and peer referral networks</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="p-3 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs flex items-center gap-2">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* Google One-Click Login Button */}
+        <button
+          type="button"
+          onClick={handleGoogleSignIn}
+          disabled={loading}
+          className="w-full py-3 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition flex items-center justify-center gap-2"
+        >
+          <svg className="w-4 h-4" viewBox="0 0 24 24">
+            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
+
+        <div className="flex items-center gap-3">
+          <div className="h-px bg-slate-200 flex-1" />
+          <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Or email</span>
+          <div className="h-px bg-slate-200 flex-1" />
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-3.5">
           {type === 'signup' && (
             <div>
               <label className="text-xs font-bold text-slate-700 block mb-1">Full Name</label>
@@ -279,8 +446,8 @@ function AuthModal({ type, onClose, showToast }) {
             <label className="text-xs font-bold text-slate-700 block mb-1">Password</label>
             <input type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600" />
           </div>
-          <button type="submit" className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition transform hover:-translate-y-0.5">
-            {type === 'signin' ? "Sign In" : "Get Started Now"}
+          <button type="submit" disabled={loading} className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+            {loading ? <RefreshCw className="w-4 h-4 animate-spin" /> : (type === 'signin' ? "Sign In" : "Get Started Now")}
           </button>
         </form>
       </div>
@@ -289,7 +456,7 @@ function AuthModal({ type, onClose, showToast }) {
 }
 
 // -------------------------------------------------------------
-// HERO LANDING PAGE VIEW (PUNCHY CONCEPT 1 HEADLINE)
+// HERO LANDING PAGE VIEW
 // -------------------------------------------------------------
 function HeroLandingView({ navigateTo, setAuthModal }) {
   return (
@@ -301,7 +468,6 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
             <span>Complete Placement Preparation & Career OS</span>
           </div>
 
-          {/* PUNCHY HEADLINE WITHOUT "RESUME" */}
           <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.12] max-w-4xl mx-auto">
             Stop Getting Ghosted by Recruiters. <br />
             <span className="bg-gradient-to-r from-indigo-600 via-sky-600 to-indigo-700 bg-clip-text text-transparent">
@@ -351,6 +517,7 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
 // -------------------------------------------------------------
 function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSelectedTemplate, showToast }) {
   const [activeSection, setActiveSection] = useState('personal');
+  const [mobileView, setMobileView] = useState('editor');
 
   const handlePersonalChange = (field, val) => {
     setResumeData(prev => ({
@@ -524,8 +691,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
 
   return (
     <div className="max-w-[1700px] mx-auto px-4 py-6 space-y-6 animate-fadeIn">
-      
-      {/* Top Banner Actions & Template Switcher */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm print:hidden">
         <div>
           <h1 className="text-lg font-black text-slate-900 flex items-center gap-2">
@@ -535,23 +700,23 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
           <p className="text-xs text-slate-500 font-normal">Switch templates live and print clean single-page ATS PDFs.</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="bg-slate-100/90 p-1 rounded-xl border border-slate-200 flex items-center gap-1">
+        <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          <div className="bg-slate-100/90 p-1 rounded-xl border border-slate-200 flex items-center gap-1 overflow-x-auto max-w-full">
             <button
               onClick={() => { setSelectedTemplate('jakes'); showToast("Switched to Jake's Classic ATS Template"); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedTemplate === 'jakes' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${selectedTemplate === 'jakes' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Jake's ATS Classic
             </button>
             <button
               onClick={() => { setSelectedTemplate('modern'); showToast("Switched to Modern Minimalist Template"); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedTemplate === 'modern' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${selectedTemplate === 'modern' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Modern Minimalist
             </button>
             <button
               onClick={() => { setSelectedTemplate('executive'); showToast("Switched to Executive Split Template"); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all ${selectedTemplate === 'executive' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold whitespace-nowrap transition-all ${selectedTemplate === 'executive' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Executive Split
             </button>
@@ -563,25 +728,35 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
         </div>
       </div>
 
+      <div className="lg:hidden flex bg-slate-200 p-1 rounded-xl font-bold text-xs">
+        <button
+          onClick={() => setMobileView('editor')}
+          className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition ${mobileView === 'editor' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600'}`}
+        >
+          <Smartphone className="w-4 h-4" /> Edit Details
+        </button>
+        <button
+          onClick={() => setMobileView('preview')}
+          className={`flex-1 py-2 rounded-lg flex items-center justify-center gap-1.5 transition ${mobileView === 'preview' ? 'bg-white text-indigo-600 shadow-sm' : 'text-slate-600'}`}
+        >
+          <Eye className="w-4 h-4" /> Live PDF Preview
+        </button>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        {/* LEFT COLUMN: EDIT FORM CONTROLS */}
-        <div className="lg:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-6 space-y-6 print:hidden max-h-[85vh] overflow-y-auto custom-scrollbar shadow-sm">
-          
-          {/* Section Navigation Pills */}
-          <div className="flex flex-wrap gap-1.5 border-b border-slate-200 pb-3">
+        <div className={`lg:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-6 space-y-6 print:hidden lg:max-h-[85vh] lg:overflow-y-auto custom-scrollbar shadow-sm ${mobileView === 'preview' ? 'hidden lg:block' : 'block'}`}>
+          <div className="flex gap-1.5 border-b border-slate-200 pb-3 overflow-x-auto no-scrollbar">
             {['personal', 'education', 'coursework', 'experience', 'projects', 'awards', 'skills'].map(sec => (
               <button
                 key={sec}
                 onClick={() => setActiveSection(sec)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition ${activeSection === sec ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider whitespace-nowrap transition ${activeSection === sec ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:text-slate-900'}`}
               >
                 {sec}
               </button>
             ))}
           </div>
 
-          {/* 1. PERSONAL INFO */}
           {activeSection === 'personal' && (
             <div className="space-y-4 animate-fadeIn">
               <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Header & Contact Details</h3>
@@ -594,7 +769,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                   <label className="text-slate-600 text-xs block mb-1 font-semibold">City, State / Address</label>
                   <input type="text" value={resumeData.personal.location} onChange={(e) => handlePersonalChange('location', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">Phone Number</label>
                     <input type="text" value={resumeData.personal.phone} onChange={(e) => handlePersonalChange('phone', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
@@ -604,7 +779,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                     <input type="text" value={resumeData.personal.email} onChange={(e) => handlePersonalChange('email', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">LinkedIn Profile URL</label>
                     <input type="text" value={resumeData.personal.linkedin} onChange={(e) => handlePersonalChange('linkedin', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
@@ -622,7 +797,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             </div>
           )}
 
-          {/* 2. EDUCATION */}
           {activeSection === 'education' && (
             <div className="space-y-3 animate-fadeIn">
               <div className="flex items-center justify-between">
@@ -644,7 +818,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                     <input type="text" value={edu.institution} onChange={(e) => handleEduChange(idx, 'institution', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Degree</label>
                       <input type="text" value={edu.degree} onChange={(e) => handleEduChange(idx, 'degree', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
@@ -674,7 +848,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             </div>
           )}
 
-          {/* 3. COURSEWORK */}
           {activeSection === 'coursework' && (
             <div className="space-y-3 animate-fadeIn">
               <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Relevant Coursework</h3>
@@ -690,7 +863,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             </div>
           )}
 
-          {/* 4. EXPERIENCE */}
           {activeSection === 'experience' && (
             <div className="space-y-4 animate-fadeIn">
               <div className="flex items-center justify-between">
@@ -706,7 +878,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                     <Trash2 className="w-4 h-4" />
                   </button>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Company</label>
                       <input type="text" value={exp.company} onChange={(e) => handleExpChange(expIdx, 'company', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
@@ -717,7 +889,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Dates</label>
                       <input type="text" value={exp.dates} onChange={(e) => handleExpChange(expIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
@@ -752,7 +924,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             </div>
           )}
 
-          {/* 5. PROJECTS */}
           {activeSection === 'projects' && (
             <div className="space-y-4 animate-fadeIn">
               <div className="flex items-center justify-between">
@@ -768,7 +939,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                     <Trash2 className="w-4 h-4" />
                   </button>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Project Name</label>
                       <input type="text" value={proj.name} onChange={(e) => handleProjChange(projIdx, 'name', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
@@ -808,7 +979,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             </div>
           )}
 
-          {/* 6. AWARDS */}
           {activeSection === 'awards' && (
             <div className="space-y-4 animate-fadeIn">
               <div className="flex items-center justify-between">
@@ -824,7 +994,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                     <Trash2 className="w-4 h-4" />
                   </button>
 
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Title</label>
                       <input type="text" value={award.title} onChange={(e) => handleAwardChange(awardIdx, 'title', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
@@ -849,7 +1019,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             </div>
           )}
 
-          {/* 7. SKILLS */}
           {activeSection === 'skills' && (
             <div className="space-y-3 animate-fadeIn">
               <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Skills & Certifications</h3>
@@ -875,33 +1044,30 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
               </div>
             </div>
           )}
-
         </div>
 
-        {/* RIGHT COLUMN: PREVIEW CONTAINER */}
-        <div className="lg:col-span-7 bg-white text-slate-950 rounded-2xl p-10 shadow-lg min-h-[1050px] border border-slate-200 print:p-0 print:shadow-none print:border-none animate-fadeIn" id="resume-preview">
-          
-          {selectedTemplate === 'jakes' && <JakesClassicPreview resumeData={resumeData} />}
-          {selectedTemplate === 'modern' && <ModernMinimalPreview resumeData={resumeData} />}
-          {selectedTemplate === 'executive' && <ExecutiveSplitPreview resumeData={resumeData} />}
-
+        <div className={`lg:col-span-7 overflow-x-auto ${mobileView === 'editor' ? 'hidden lg:block' : 'block'}`}>
+          <div className="bg-white text-slate-950 rounded-2xl p-6 sm:p-10 shadow-lg min-h-[900px] sm:min-h-[1050px] border border-slate-200 print:p-0 print:shadow-none print:border-none animate-fadeIn min-w-[320px]" id="resume-preview">
+            {selectedTemplate === 'jakes' && <JakesClassicPreview resumeData={resumeData} />}
+            {selectedTemplate === 'modern' && <ModernMinimalPreview resumeData={resumeData} />}
+            {selectedTemplate === 'executive' && <ExecutiveSplitPreview resumeData={resumeData} />}
+          </div>
         </div>
-
       </div>
     </div>
   );
 }
 
 // -------------------------------------------------------------
-// TEMPLATES PREVIEWS (UNTOUCHED ATS SPEC)
+// TEMPLATES PREVIEWS
 // -------------------------------------------------------------
 function JakesClassicPreview({ resumeData }) {
   return (
     <div className="font-serif leading-tight">
       <div className="text-center space-y-1 mb-3">
-        <h1 className="text-3xl font-extrabold tracking-wide uppercase font-serif text-black">{resumeData.personal.fullName || "First Last"}</h1>
-        <p className="text-[13px] text-slate-800 font-serif">{resumeData.personal.location}</p>
-        <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] text-slate-900 font-serif pt-0.5">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-wide uppercase font-serif text-black">{resumeData.personal.fullName || "First Last"}</h1>
+        <p className="text-[12px] sm:text-[13px] text-slate-800 font-serif">{resumeData.personal.location}</p>
+        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-[11px] sm:text-[12px] text-slate-900 font-serif pt-0.5">
           {resumeData.personal.phone && <span>📞 {resumeData.personal.phone}</span>}
           {resumeData.personal.email && <span>✉ {resumeData.personal.email}</span>}
           {resumeData.personal.linkedin && <span>🔗 {resumeData.personal.linkedin}</span>}
@@ -911,14 +1077,14 @@ function JakesClassicPreview({ resumeData }) {
       </div>
 
       <div className="mb-3">
-        <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Education</h2>
+        <h2 className="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Education</h2>
         {resumeData.education.map((edu) => (
           <div key={edu.id} className="mb-1.5">
-            <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
+            <div className="flex justify-between items-baseline text-[12px] sm:text-[13px] font-bold text-black">
               <span>{edu.institution}</span>
               <span>{edu.dates}</span>
             </div>
-            <div className="flex justify-between items-baseline text-[12px] italic text-slate-800">
+            <div className="flex justify-between items-baseline text-[11px] sm:text-[12px] italic text-slate-800">
               <span>
                 {edu.degree} {edu.branch ? `in ${edu.branch}` : ''} {edu.cgpa ? `(CGPA: ${edu.cgpa})` : ''}
               </span>
@@ -928,11 +1094,11 @@ function JakesClassicPreview({ resumeData }) {
         ))}
 
         {resumeData.coursework.length > 0 && (
-          <div className="mt-2 text-[12px] text-slate-900">
+          <div className="mt-2 text-[11px] sm:text-[12px] text-slate-900">
             <span className="font-bold block mb-1">Relevant Coursework:</span>
-            <div className="grid grid-cols-4 gap-x-2 gap-y-0.5 pl-3">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-2 gap-y-0.5 pl-3">
               {resumeData.coursework.map((course, cIdx) => (
-                <div key={cIdx} className="text-[11.5px]">• {course}</div>
+                <div key={cIdx} className="text-[11px] sm:text-[11.5px]">• {course}</div>
               ))}
             </div>
           </div>
@@ -941,18 +1107,18 @@ function JakesClassicPreview({ resumeData }) {
 
       {resumeData.experience.length > 0 && (
         <div className="mb-3">
-          <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Experience</h2>
+          <h2 className="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Experience</h2>
           {resumeData.experience.map((exp) => (
             <div key={exp.id} className="mb-2.5">
-              <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
+              <div className="flex justify-between items-baseline text-[12px] sm:text-[13px] font-bold text-black">
                 <span>{exp.company}</span>
                 <span>{exp.dates}</span>
               </div>
-              <div className="flex justify-between items-baseline text-[12px] italic text-slate-800 mb-1">
+              <div className="flex justify-between items-baseline text-[11px] sm:text-[12px] italic text-slate-800 mb-1">
                 <span>{exp.title}</span>
                 <span>{exp.location}</span>
               </div>
-              <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug">
+              <ul className="list-disc pl-5 text-[11px] sm:text-[11.5px] text-slate-900 space-y-0.5 leading-snug">
                 {exp.bullets.map((b, bIdx) => (
                   <li key={bIdx}>{b}</li>
                 ))}
@@ -964,17 +1130,17 @@ function JakesClassicPreview({ resumeData }) {
 
       {resumeData.projects.length > 0 && (
         <div className="mb-3">
-          <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Projects</h2>
+          <h2 className="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Projects</h2>
           {resumeData.projects.map((proj) => (
             <div key={proj.id} className="mb-2">
-              <div className="flex justify-between items-baseline text-[12.5px] text-black">
+              <div className="flex justify-between items-baseline text-[12px] sm:text-[12.5px] text-black">
                 <div>
                   <span className="font-bold">{proj.name}</span>
                   {proj.tech && <span className="italic font-normal"> | {proj.tech}</span>}
                 </div>
-                <span className="font-bold text-[12px]">{proj.dates}</span>
+                <span className="font-bold text-[11px] sm:text-[12px]">{proj.dates}</span>
               </div>
-              <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug mt-0.5">
+              <ul className="list-disc pl-5 text-[11px] sm:text-[11.5px] text-slate-900 space-y-0.5 leading-snug mt-0.5">
                 {proj.bullets.map((b, bIdx) => (
                   <li key={bIdx}>{b}</li>
                 ))}
@@ -986,15 +1152,15 @@ function JakesClassicPreview({ resumeData }) {
 
       {resumeData.awards && resumeData.awards.length > 0 && (
         <div className="mb-3">
-          <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Honors & Awards</h2>
+          <h2 className="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Honors & Awards</h2>
           {resumeData.awards.map((award) => (
             <div key={award.id} className="mb-1.5">
-              <div className="flex justify-between items-baseline text-[12.5px] text-black font-bold">
+              <div className="flex justify-between items-baseline text-[12px] sm:text-[12.5px] text-black font-bold">
                 <span>{award.title} {award.issuer ? `— ${award.issuer}` : ''}</span>
-                <span className="text-[12px] font-normal">{award.dates}</span>
+                <span className="text-[11px] sm:text-[12px] font-normal">{award.dates}</span>
               </div>
               {award.details && (
-                <p className="text-[11.5px] text-slate-800 pl-3 leading-snug mt-0.5">• {award.details}</p>
+                <p className="text-[11px] sm:text-[11.5px] text-slate-800 pl-3 leading-snug mt-0.5">• {award.details}</p>
               )}
             </div>
           ))}
@@ -1002,8 +1168,8 @@ function JakesClassicPreview({ resumeData }) {
       )}
 
       <div>
-        <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills</h2>
-        <div className="text-[12px] text-slate-900 space-y-1">
+        <h2 className="text-[13px] sm:text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills</h2>
+        <div className="text-[11.5px] sm:text-[12px] text-slate-900 space-y-1">
           {resumeData.skills.languages && <div><strong className="font-bold text-black">Languages:</strong> {resumeData.skills.languages}</div>}
           {resumeData.skills.frameworks && <div><strong className="font-bold text-black">Frameworks / Tech:</strong> {resumeData.skills.frameworks}</div>}
           {resumeData.skills.tools && <div><strong className="font-bold text-black">Developer Tools:</strong> {resumeData.skills.tools}</div>}
@@ -1019,9 +1185,9 @@ function ModernMinimalPreview({ resumeData }) {
   return (
     <div className="font-sans leading-relaxed text-slate-900 space-y-5">
       <div className="border-b-2 border-indigo-600 pb-4">
-        <h1 className="text-3xl font-black tracking-tight text-slate-950 uppercase">{resumeData.personal.fullName}</h1>
+        <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-950 uppercase">{resumeData.personal.fullName}</h1>
         <p className="text-xs text-indigo-600 font-bold uppercase tracking-widest mt-1">{resumeData.personal.location}</p>
-        <div className="flex flex-wrap gap-4 text-xs text-slate-600 pt-2 font-medium">
+        <div className="flex flex-wrap gap-3 sm:gap-4 text-xs text-slate-600 pt-2 font-medium">
           {resumeData.personal.email && <span>{resumeData.personal.email}</span>}
           {resumeData.personal.phone && <span>{resumeData.personal.phone}</span>}
           {resumeData.personal.linkedin && <span>{resumeData.personal.linkedin}</span>}
@@ -1091,13 +1257,13 @@ function ModernMinimalPreview({ resumeData }) {
 
 function ExecutiveSplitPreview({ resumeData }) {
   return (
-    <div className="font-sans grid grid-cols-12 gap-6 text-slate-900 leading-normal">
-      <div className="col-span-12 border-b border-slate-300 pb-3">
-        <h1 className="text-3xl font-extrabold text-slate-950 tracking-tight">{resumeData.personal.fullName}</h1>
+    <div className="font-sans grid grid-cols-1 md:grid-cols-12 gap-6 text-slate-900 leading-normal">
+      <div className="md:col-span-12 border-b border-slate-300 pb-3">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight">{resumeData.personal.fullName}</h1>
         <p className="text-xs text-slate-600 font-semibold">{resumeData.personal.location} | {resumeData.personal.email} | {resumeData.personal.phone}</p>
       </div>
 
-      <div className="col-span-8 space-y-4">
+      <div className="md:col-span-8 space-y-4">
         <div>
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-2">Experience</h2>
           {resumeData.experience.map((exp) => (
@@ -1127,7 +1293,7 @@ function ExecutiveSplitPreview({ resumeData }) {
         </div>
       </div>
 
-      <div className="col-span-4 bg-slate-50 p-4 rounded-xl space-y-4 border border-slate-200">
+      <div className="md:col-span-4 bg-slate-50 p-4 rounded-xl space-y-4 border border-slate-200">
         <div>
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-900 mb-1">Education</h2>
           {resumeData.education.map((edu) => (
@@ -1434,7 +1600,7 @@ function ReferralNetworkHub({ showToast, setAuthModal }) {
 }
 
 // -------------------------------------------------------------
-// FULL CAMPUS AMBASSADOR ECOSYSTEM (WITH FULL FORM & INPUTS)
+// CAMPUS AMBASSADOR ECOSYSTEM
 // -------------------------------------------------------------
 function CampusEcosystemView({ showToast }) {
   const [formData, setFormData] = useState({
@@ -1561,4 +1727,4 @@ function CampusEcosystemView({ showToast }) {
       </div>
     </div>
   );
-}
+} 
