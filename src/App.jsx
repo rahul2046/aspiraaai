@@ -1,12 +1,12 @@
-import React, { useState, useRef } from 'react';
+ import React, { useState, useRef } from 'react';
 import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
   GraduationCap, RefreshCw, Trophy, Send, CheckCircle, AlertCircle, Printer, Eye,
-  Upload, File, Award, Star, ArrowUpRight, Check
+  Upload, File, Award, Star, ArrowUpRight, Check, Layout, Sparkle, ShieldCheck, Layers
 } from 'lucide-react';
 
-const JAKES_INITIAL_DATA = {
+const INITIAL_RESUME_DATA = {
   personal: {
     fullName: "First Last",
     location: "City, State, Country",
@@ -77,9 +77,10 @@ const JAKES_INITIAL_DATA = {
 };
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('builder');
+  const [activeTab, setActiveTab] = useState('landing');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [resumeData, setResumeData] = useState(JAKES_INITIAL_DATA);
+  const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
+  const [selectedTemplate, setSelectedTemplate] = useState('jakes'); // 'jakes' | 'modern' | 'executive'
   const [toastMessage, setToastMessage] = useState(null);
 
   const showToast = (msg) => {
@@ -97,7 +98,7 @@ export default function App() {
     <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 to-sky-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-indigo-400/40 animate-bounce">
+        <div className="fixed bottom-6 right-6 z-50 bg-gradient-to-r from-indigo-600 via-sky-600 to-emerald-600 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-indigo-400/40 animate-bounce">
           <Sparkles className="w-5 h-5 text-amber-300 flex-shrink-0 animate-spin" />
           <span className="text-sm font-semibold">{toastMessage}</span>
         </div>
@@ -106,31 +107,38 @@ export default function App() {
       {/* HEADER NAVBAR */}
       <header className="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-md border-b border-slate-800/80 transition-all print:hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigateTo('builder')}>
+          <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigateTo('landing')}>
             <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center font-bold text-xl text-white shadow-lg shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-300">
               A
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black tracking-tight text-white flex items-center gap-2">
-                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Jake's Resume OS</span>
+                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">Career OS</span>
               </span>
             </div>
           </div>
 
           <nav className="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-300">
             <button 
+              onClick={() => navigateTo('landing')} 
+              className={`px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${activeTab === 'landing' ? 'text-white bg-slate-800/80 font-semibold shadow-inner border border-slate-700' : 'hover:text-white hover:bg-slate-800/40'}`}
+            >
+              <Layout className="w-4 h-4 text-sky-400" />
+              Home
+            </button>
+            <button 
               onClick={() => navigateTo('builder')} 
               className={`px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${activeTab === 'builder' ? 'text-white bg-slate-800/80 font-semibold shadow-inner border border-slate-700' : 'hover:text-white hover:bg-slate-800/40'}`}
             >
               <FileText className="w-4 h-4 text-indigo-400" />
-              Jake's Resume Builder
+              Resume Builder Studio
             </button>
             <button 
               onClick={() => navigateTo('ats')} 
               className={`px-3.5 py-2 rounded-lg transition-all duration-200 flex items-center gap-2 ${activeTab === 'ats' ? 'text-white bg-slate-800/80 font-semibold shadow-inner border border-slate-700' : 'hover:text-white hover:bg-slate-800/40'}`}
             >
               <Upload className="w-4 h-4 text-emerald-400" />
-              Upload PDF ATS Scanner
+              ATS Scanner
             </button>
             <button 
               onClick={() => navigateTo('campus')} 
@@ -142,9 +150,9 @@ export default function App() {
           </nav>
 
           <div className="hidden sm:flex items-center gap-3">
-            <button onClick={() => window.print()} className="text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 text-white shadow-lg hover:scale-105 active:scale-95 transition duration-200 flex items-center gap-2">
-              <Printer className="w-4 h-4" />
-              <span>Print / Save PDF</span>
+            <button onClick={() => navigateTo('builder')} className="text-xs font-bold px-4 py-2 rounded-lg bg-gradient-to-r from-indigo-500 to-sky-500 text-white shadow-lg hover:scale-105 active:scale-95 transition duration-200 flex items-center gap-2">
+              <Zap className="w-4 h-4" />
+              <span>Build My Resume</span>
             </button>
           </div>
 
@@ -157,8 +165,9 @@ export default function App() {
 
         {mobileMenuOpen && (
           <div className="lg:hidden border-b border-slate-800 bg-slate-950 px-4 pt-2 pb-6 space-y-2 text-sm font-medium animate-fadeIn">
-            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded bg-slate-900 text-white">Jake's Resume Builder</button>
-            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Upload PDF ATS Scanner</button>
+            <button onClick={() => navigateTo('landing')} className="block w-full text-left px-3 py-2 rounded bg-slate-900 text-white">Home</button>
+            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">Resume Builder Studio</button>
+            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded hover:bg-slate-900 text-slate-300">ATS Scanner</button>
             <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded hover:bg-indigo-950/40 text-indigo-400 font-bold">Campus Ambassador</button>
           </div>
         )}
@@ -166,22 +175,135 @@ export default function App() {
 
       {/* DYNAMIC VIEWS */}
       <main className="flex-1">
-        {activeTab === 'builder' && <JakesResumeStudio resumeData={resumeData} setResumeData={setResumeData} showToast={showToast} />}
+        {activeTab === 'landing' && <HeroLandingView navigateTo={navigateTo} />}
+        {activeTab === 'builder' && (
+          <JakesResumeStudio 
+            resumeData={resumeData} 
+            setResumeData={setResumeData} 
+            selectedTemplate={selectedTemplate}
+            setSelectedTemplate={setSelectedTemplate}
+            showToast={showToast} 
+          />
+        )}
         {activeTab === 'ats' && <AtsCheckerSuite resumeData={resumeData} showToast={showToast} />}
         {activeTab === 'campus' && <CampusEcosystemView showToast={showToast} />}
       </main>
 
-      <footer className="border-t border-slate-800 bg-slate-950 text-slate-400 text-xs py-8 print:hidden text-center">
-        <p>© {new Date().getFullYear()} Aspiraa Resume OS. Pixel-Perfect Jake's ATS Resume Builder & Placement Platform.</p>
+      <footer className="border-t border-slate-800/80 bg-slate-950 text-slate-400 text-xs py-8 print:hidden text-center">
+        <p>© {new Date().getFullYear()} Aspiraa Career OS. High-Impact ATS Resume Engine & Placement Ecosystem.</p>
       </footer>
     </div>
   );
 }
 
 // -------------------------------------------------------------
-// JAKE'S RESUME BUILDER & LIVE ATS PREVIEW
+// HERO LANDING PAGE VIEW
 // -------------------------------------------------------------
-function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
+function HeroLandingView({ navigateTo }) {
+  return (
+    <div className="space-y-20 pb-20 animate-fadeIn">
+      
+      {/* HERO BANNER SECTION */}
+      <section className="relative pt-16 pb-12 overflow-hidden border-b border-slate-800/60 bg-gradient-to-b from-slate-950 via-slate-900/60 to-slate-950">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-indigo-500/10 blur-[130px] rounded-full pointer-events-none" />
+        
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold shadow-inner">
+            <Sparkles className="w-4 h-4 text-amber-400" />
+            <span>Next-Gen Placement Preparation Platform for Students</span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.15] max-w-4xl mx-auto">
+            Build ATS-Optimized Resumes. <br />
+            <span className="bg-gradient-to-r from-indigo-400 via-sky-300 to-emerald-400 bg-clip-text text-transparent">Land College Campus Placements.</span>
+          </h1>
+
+          <p className="text-sm sm:text-base text-slate-300 max-w-2xl mx-auto leading-relaxed">
+            Create recruiter-vetted resumes in standard Jake's ATS format or modern executive styles. Scan job descriptions, check match scores, and lead student drives.
+          </p>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
+            <button 
+              onClick={() => navigateTo('builder')}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-500 hover:from-indigo-500 hover:to-sky-400 text-white font-bold text-sm tracking-wider uppercase shadow-xl shadow-indigo-500/25 flex items-center justify-center gap-3 transition transform hover:scale-105 active:scale-95"
+            >
+              <span>Launch Resume Studio</span>
+              <ArrowRight className="w-5 h-5" />
+            </button>
+
+            <button 
+              onClick={() => navigateTo('ats')}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 font-bold text-sm tracking-wider uppercase flex items-center justify-center gap-2 transition"
+            >
+              <Upload className="w-4 h-4 text-emerald-400" />
+              <span>Scan Existing PDF</span>
+            </button>
+          </div>
+
+          {/* STATS STRIP */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 max-w-4xl mx-auto border-t border-slate-800/80">
+            <div>
+              <span className="block text-3xl font-extrabold text-white">99.2%</span>
+              <span className="text-xs text-slate-400 font-medium">Recruiter ATS Parsing Rate</span>
+            </div>
+            <div>
+              <span className="block text-3xl font-extrabold text-indigo-400">3+</span>
+              <span className="text-xs text-slate-400 font-medium">Recruiter-Approved Templates</span>
+            </div>
+            <div>
+              <span className="block text-3xl font-extrabold text-sky-400">100%</span>
+              <span className="text-xs text-slate-400 font-medium">Free & Open Source</span>
+            </div>
+            <div>
+              <span className="block text-3xl font-extrabold text-emerald-400">50+</span>
+              <span className="text-xs text-slate-400 font-medium">Partner Universities</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FEATURE HIGHLIGHT CARDS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="text-center space-y-3">
+          <h2 className="text-2xl sm:text-4xl font-extrabold text-white">Designed for High-Consequence Engineering Hiring</h2>
+          <p className="text-xs sm:text-sm text-slate-400 max-w-xl mx-auto">Everything you need to bypass ATS keywords filters and make an instant impact with hiring managers.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-6 bg-slate-900/70 border border-slate-800 rounded-2xl space-y-4 hover:border-indigo-500/50 transition">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center">
+              <Layers className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Multiple Layout Presets</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">Choose between classic Jake's ATS single-column format, modern clean layout, or executive split columns depending on your target role.</p>
+          </div>
+
+          <div className="p-6 bg-slate-900/70 border border-slate-800 rounded-2xl space-y-4 hover:border-emerald-500/50 transition">
+            <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center">
+              <Zap className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Instant Keyword ATS Analysis</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">Upload target job descriptions to run real-time comparisons and identify missing technical keywords before submitting applications.</p>
+          </div>
+
+          <div className="p-6 bg-slate-900/70 border border-slate-800 rounded-2xl space-y-4 hover:border-sky-500/50 transition">
+            <div className="w-12 h-12 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20 flex items-center justify-center">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white">Campus Ambassador Hub</h3>
+            <p className="text-xs text-slate-400 leading-relaxed">Empower student leaders to host resume preparation workshops, track campus outreach, and unlock certificate rewards.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// RESUME BUILDER STUDIO WITH TEMPLATES
+// -------------------------------------------------------------
+function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSelectedTemplate, showToast }) {
   const [activeSection, setActiveSection] = useState('personal');
 
   const handlePersonalChange = (field, val) => {
@@ -319,7 +441,6 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
     setResumeData(prev => ({ ...prev, projects: updated }));
   };
 
-  // AWARDS HANDLERS
   const handleAwardChange = (idx, field, val) => {
     const updated = [...(resumeData.awards || [])];
     updated[idx][field] = val;
@@ -358,17 +479,39 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
   return (
     <div className="max-w-[1700px] mx-auto px-4 py-8 space-y-6">
       
-      {/* Top Banner Actions */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl print:hidden">
+      {/* Top Banner Actions & Template Switcher */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-slate-900 border border-slate-800 p-5 rounded-2xl print:hidden">
         <div>
           <h1 className="text-xl font-bold text-white flex items-center gap-2">
             <FileText className="w-5 h-5 text-indigo-400" />
-            Jake's Resume Builder (ATS Edition)
+            ATS Resume Studio
           </h1>
-          <p className="text-xs text-slate-400 font-normal">All input fields including CGPA/GPA, Branch, Coursework, Experience, Projects, Awards & Skills.</p>
+          <p className="text-xs text-slate-400 font-normal">Choose your template style, edit fields, and print clean single-page PDFs.</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        {/* TEMPLATE SWITCHER PILLS */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="bg-slate-950 p-1 rounded-xl border border-slate-800 flex items-center gap-1">
+            <button
+              onClick={() => { setSelectedTemplate('jakes'); showToast("Switched to Jake's Classic ATS Template"); }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${selectedTemplate === 'jakes' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+            >
+              Jake's ATS Classic
+            </button>
+            <button
+              onClick={() => { setSelectedTemplate('modern'); showToast("Switched to Modern Minimalist Template"); }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${selectedTemplate === 'modern' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+            >
+              Modern Minimalist
+            </button>
+            <button
+              onClick={() => { setSelectedTemplate('executive'); showToast("Switched to Executive Split Template"); }}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${selectedTemplate === 'executive' ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'}`}
+            >
+              Executive Split
+            </button>
+          </div>
+
           <button onClick={() => window.print()} className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg transition">
             <Printer className="w-4 h-4" /> Print / Save PDF
           </button>
@@ -498,7 +641,6 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
                   onChange={(e) => handleCourseworkChange(e.target.value)}
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-white font-mono focus:border-indigo-500 focus:outline-none"
                 />
-                <p className="text-[11px] text-slate-500 mt-1">Formatted into a balanced 4-column layout under Education in Jake's format.</p>
               </div>
             </div>
           )}
@@ -532,11 +674,11 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Dates (e.g., May 2025 – Jul 2025)</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Dates</label>
                       <input type="text" value={exp.dates} onChange={(e) => handleExpChange(expIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Location (e.g., City, State)</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Location</label>
                       <input type="text" value={exp.location} onChange={(e) => handleExpChange(expIdx, 'location', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                   </div>
@@ -587,13 +729,13 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
                       <input type="text" value={proj.name} onChange={(e) => handleProjChange(projIdx, 'name', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date (e.g., Jan 2026)</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date</label>
                       <input type="text" value={proj.dates} onChange={(e) => handleProjChange(projIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Technologies Used (e.g., React, Node.js, Python)</label>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Technologies Used</label>
                     <input type="text" value={proj.tech} onChange={(e) => handleProjChange(projIdx, 'tech', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                   </div>
 
@@ -621,13 +763,13 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
             </div>
           )}
 
-          {/* 6. AWARDS & HONORS (OPTIONAL SECTION) */}
+          {/* 6. AWARDS & HONORS */}
           {activeSection === 'awards' && (
             <div className="space-y-6 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <div>
                   <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Honors & Awards (Optional)</h3>
-                  <p className="text-[11px] text-slate-400">Add competition ranks, hackathon wins, or academic honors.</p>
+                  <p className="text-[11px] text-slate-400">Add competition ranks or academic honors.</p>
                 </div>
                 <button onClick={addAward} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg text-xs font-bold flex items-center gap-1">
                   <Plus className="w-3.5 h-3.5" /> Add Award
@@ -642,22 +784,22 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Award / Honor Title</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Award Title</label>
                       <input type="text" value={award.title} onChange={(e) => handleAwardChange(awardIdx, 'title', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                     <div>
-                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date (e.g., Oct 2025)</label>
+                      <label className="text-slate-400 text-xs block mb-1 font-semibold">Date</label>
                       <input type="text" value={award.dates} onChange={(e) => handleAwardChange(awardIdx, 'dates', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                     </div>
                   </div>
 
                   <div>
-                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Issuing Organization / Host</label>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Issuing Organization</label>
                     <input type="text" value={award.issuer} onChange={(e) => handleAwardChange(awardIdx, 'issuer', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                   </div>
 
                   <div>
-                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Short Detail / Description</label>
+                    <label className="text-slate-400 text-xs block mb-1 font-semibold">Short Description</label>
                     <input type="text" value={award.details} onChange={(e) => handleAwardChange(awardIdx, 'details', e.target.value)} className="w-full bg-slate-900 border border-slate-800 rounded-lg p-2 text-xs text-white" />
                   </div>
                 </div>
@@ -665,168 +807,41 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
             </div>
           )}
 
-          {/* 7. TECHNICAL SKILLS & CERTIFICATIONS */}
+          {/* 7. TECHNICAL SKILLS */}
           {activeSection === 'skills' && (
             <div className="space-y-4 animate-fadeIn">
               <h3 className="text-xs font-bold uppercase text-indigo-400 tracking-wider">Skills & Certifications</h3>
               <div>
-                <label className="text-slate-400 text-xs block mb-1 font-semibold">Programming Languages</label>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Languages</label>
                 <input type="text" value={resumeData.skills.languages} onChange={(e) => handleSkillChange('languages', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
               </div>
               <div>
-                <label className="text-slate-400 text-xs block mb-1 font-semibold">Frameworks / Libraries</label>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Frameworks / Tech</label>
                 <input type="text" value={resumeData.skills.frameworks} onChange={(e) => handleSkillChange('frameworks', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
               </div>
               <div>
-                <label className="text-slate-400 text-xs block mb-1 font-semibold">Developer Tools & Software</label>
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Developer Tools</label>
                 <input type="text" value={resumeData.skills.tools} onChange={(e) => handleSkillChange('tools', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
               </div>
               <div>
-                <label className="text-slate-400 text-xs block mb-1 font-semibold">Soft Skills & Leadership</label>
-                <input type="text" value={resumeData.skills.soft || ""} onChange={(e) => handleSkillChange('soft', e.target.value)} placeholder="Problem Solving, Agile, Team Leadership" className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
+                <label className="text-slate-400 text-xs block mb-1 font-semibold">Soft Skills</label>
+                <input type="text" value={resumeData.skills.soft || ""} onChange={(e) => handleSkillChange('soft', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
               </div>
               <div>
                 <label className="text-slate-400 text-xs block mb-1 font-semibold">Certifications</label>
-                <input type="text" value={resumeData.skills.certifications || ""} onChange={(e) => handleSkillChange('certifications', e.target.value)} placeholder="AWS Certified, Meta Front-End" className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
+                <input type="text" value={resumeData.skills.certifications || ""} onChange={(e) => handleSkillChange('certifications', e.target.value)} className="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-xs text-white" />
               </div>
             </div>
           )}
 
         </div>
 
-        {/* RIGHT COLUMN: PIXEL-PERFECT JAKE'S RESUME LIVE PREVIEW */}
-        <div className="lg:col-span-7 bg-white text-slate-950 rounded-lg p-10 shadow-2xl min-h-[1050px] border border-slate-300 font-serif leading-tight print:p-0 print:shadow-none print:border-none" id="resume-preview">
+        {/* RIGHT COLUMN: DYNAMIC PREVIEW BASED ON TEMPLATE SELECTOR */}
+        <div className="lg:col-span-7 bg-white text-slate-950 rounded-lg p-10 shadow-2xl min-h-[1050px] border border-slate-300 print:p-0 print:shadow-none print:border-none" id="resume-preview">
           
-          {/* HEADER */}
-          <div className="text-center space-y-1 mb-3">
-            <h1 className="text-3xl font-extrabold tracking-wide uppercase font-serif text-black">{resumeData.personal.fullName || "First Last"}</h1>
-            <p className="text-[13px] text-slate-800 font-serif">{resumeData.personal.location}</p>
-            <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] text-slate-900 font-serif pt-0.5">
-              {resumeData.personal.phone && <span>📞 {resumeData.personal.phone}</span>}
-              {resumeData.personal.email && <span>✉ {resumeData.personal.email}</span>}
-              {resumeData.personal.linkedin && <span>🔗 {resumeData.personal.linkedin}</span>}
-              {resumeData.personal.github && <span>💻 {resumeData.personal.github}</span>}
-              {resumeData.personal.portfolio && <span>🌐 {resumeData.personal.portfolio}</span>}
-            </div>
-          </div>
-
-          {/* EDUCATION */}
-          <div className="mb-3">
-            <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Education</h2>
-            {resumeData.education.map((edu) => (
-              <div key={edu.id} className="mb-1.5">
-                <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
-                  <span>{edu.institution}</span>
-                  <span>{edu.dates}</span>
-                </div>
-                <div className="flex justify-between items-baseline text-[12px] italic text-slate-800">
-                  <span>
-                    {edu.degree} {edu.branch ? `in ${edu.branch}` : ''} {edu.cgpa ? `(CGPA: ${edu.cgpa})` : ''}
-                  </span>
-                  <span>{edu.location}</span>
-                </div>
-              </div>
-            ))}
-
-            {/* RELEVANT COURSEWORK GRID */}
-            {resumeData.coursework.length > 0 && (
-              <div className="mt-2 text-[12px] text-slate-900">
-                <span className="font-bold block mb-1">Relevant Coursework:</span>
-                <div className="grid grid-cols-4 gap-x-2 gap-y-0.5 pl-3">
-                  {resumeData.coursework.map((course, cIdx) => (
-                    <div key={cIdx} className="text-[11.5px]">• {course}</div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* EXPERIENCE */}
-          {resumeData.experience.length > 0 && (
-            <div className="mb-3">
-              <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Experience</h2>
-              {resumeData.experience.map((exp) => (
-                <div key={exp.id} className="mb-2.5">
-                  <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
-                    <span>{exp.company}</span>
-                    <span>{exp.dates}</span>
-                  </div>
-                  <div className="flex justify-between items-baseline text-[12px] italic text-slate-800 mb-1">
-                    <span>{exp.title}</span>
-                    <span>{exp.location}</span>
-                  </div>
-                  <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug">
-                    {exp.bullets.map((b, bIdx) => (
-                      <li key={bIdx}>{b}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* PROJECTS */}
-          {resumeData.projects.length > 0 && (
-            <div className="mb-3">
-              <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Projects</h2>
-              {resumeData.projects.map((proj) => (
-                <div key={proj.id} className="mb-2">
-                  <div className="flex justify-between items-baseline text-[12.5px] text-black">
-                    <div>
-                      <span className="font-bold">{proj.name}</span>
-                      {proj.tech && <span className="italic font-normal"> | {proj.tech}</span>}
-                    </div>
-                    <span className="font-bold text-[12px]">{proj.dates}</span>
-                  </div>
-                  <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug mt-0.5">
-                    {proj.bullets.map((b, bIdx) => (
-                      <li key={bIdx}>{b}</li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* HONORS & AWARDS (OPTIONAL - HIDES AUTOMATICALLY IF EMPTY) */}
-          {resumeData.awards && resumeData.awards.length > 0 && (
-            <div className="mb-3">
-              <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Honors & Awards</h2>
-              {resumeData.awards.map((award) => (
-                <div key={award.id} className="mb-1.5">
-                  <div className="flex justify-between items-baseline text-[12.5px] text-black font-bold">
-                    <span>{award.title} {award.issuer ? `— ${award.issuer}` : ''}</span>
-                    <span className="text-[12px] font-normal">{award.dates}</span>
-                  </div>
-                  {award.details && (
-                    <p className="text-[11.5px] text-slate-800 pl-3 leading-snug mt-0.5">• {award.details}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
-
-          {/* TECHNICAL SKILLS & CERTIFICATIONS */}
-          <div>
-            <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills</h2>
-            <div className="text-[12px] text-slate-900 space-y-1">
-              {resumeData.skills.languages && (
-                <div><strong className="font-bold text-black">Languages:</strong> {resumeData.skills.languages}</div>
-              )}
-              {resumeData.skills.frameworks && (
-                <div><strong className="font-bold text-black">Frameworks / Tech:</strong> {resumeData.skills.frameworks}</div>
-              )}
-              {resumeData.skills.tools && (
-                <div><strong className="font-bold text-black">Developer Tools & Software:</strong> {resumeData.skills.tools}</div>
-              )}
-              {resumeData.skills.soft && (
-                <div><strong className="font-bold text-black">Soft Skills:</strong> {resumeData.skills.soft}</div>
-              )}
-              {resumeData.skills.certifications && (
-                <div><strong className="font-bold text-black">Certifications:</strong> {resumeData.skills.certifications}</div>
-              )}
-            </div>
-          </div>
+          {selectedTemplate === 'jakes' && <JakesClassicPreview resumeData={resumeData} />}
+          {selectedTemplate === 'modern' && <ModernMinimalPreview resumeData={resumeData} />}
+          {selectedTemplate === 'executive' && <ExecutiveSplitPreview resumeData={resumeData} />}
 
         </div>
 
@@ -836,7 +851,282 @@ function JakesResumeStudio({ resumeData, setResumeData, showToast }) {
 }
 
 // -------------------------------------------------------------
-// 2. PDF / RESUME UPLOAD ATS CHECKER SUITE
+// TEMPLATE 1: JAKE'S ATS CLASSIC PREVIEW
+// -------------------------------------------------------------
+function JakesClassicPreview({ resumeData }) {
+  return (
+    <div className="font-serif leading-tight">
+      {/* HEADER */}
+      <div className="text-center space-y-1 mb-3">
+        <h1 className="text-3xl font-extrabold tracking-wide uppercase font-serif text-black">{resumeData.personal.fullName || "First Last"}</h1>
+        <p className="text-[13px] text-slate-800 font-serif">{resumeData.personal.location}</p>
+        <div className="flex flex-wrap items-center justify-center gap-3 text-[12px] text-slate-900 font-serif pt-0.5">
+          {resumeData.personal.phone && <span>📞 {resumeData.personal.phone}</span>}
+          {resumeData.personal.email && <span>✉ {resumeData.personal.email}</span>}
+          {resumeData.personal.linkedin && <span>🔗 {resumeData.personal.linkedin}</span>}
+          {resumeData.personal.github && <span>💻 {resumeData.personal.github}</span>}
+          {resumeData.personal.portfolio && <span>🌐 {resumeData.personal.portfolio}</span>}
+        </div>
+      </div>
+
+      {/* EDUCATION */}
+      <div className="mb-3">
+        <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Education</h2>
+        {resumeData.education.map((edu) => (
+          <div key={edu.id} className="mb-1.5">
+            <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
+              <span>{edu.institution}</span>
+              <span>{edu.dates}</span>
+            </div>
+            <div className="flex justify-between items-baseline text-[12px] italic text-slate-800">
+              <span>
+                {edu.degree} {edu.branch ? `in ${edu.branch}` : ''} {edu.cgpa ? `(CGPA: ${edu.cgpa})` : ''}
+              </span>
+              <span>{edu.location}</span>
+            </div>
+          </div>
+        ))}
+
+        {resumeData.coursework.length > 0 && (
+          <div className="mt-2 text-[12px] text-slate-900">
+            <span className="font-bold block mb-1">Relevant Coursework:</span>
+            <div className="grid grid-cols-4 gap-x-2 gap-y-0.5 pl-3">
+              {resumeData.coursework.map((course, cIdx) => (
+                <div key={cIdx} className="text-[11.5px]">• {course}</div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* EXPERIENCE */}
+      {resumeData.experience.length > 0 && (
+        <div className="mb-3">
+          <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Experience</h2>
+          {resumeData.experience.map((exp) => (
+            <div key={exp.id} className="mb-2.5">
+              <div className="flex justify-between items-baseline text-[13px] font-bold text-black">
+                <span>{exp.company}</span>
+                <span>{exp.dates}</span>
+              </div>
+              <div className="flex justify-between items-baseline text-[12px] italic text-slate-800 mb-1">
+                <span>{exp.title}</span>
+                <span>{exp.location}</span>
+              </div>
+              <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug">
+                {exp.bullets.map((b, bIdx) => (
+                  <li key={bIdx}>{b}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* PROJECTS */}
+      {resumeData.projects.length > 0 && (
+        <div className="mb-3">
+          <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Projects</h2>
+          {resumeData.projects.map((proj) => (
+            <div key={proj.id} className="mb-2">
+              <div className="flex justify-between items-baseline text-[12.5px] text-black">
+                <div>
+                  <span className="font-bold">{proj.name}</span>
+                  {proj.tech && <span className="italic font-normal"> | {proj.tech}</span>}
+                </div>
+                <span className="font-bold text-[12px]">{proj.dates}</span>
+              </div>
+              <ul className="list-disc pl-5 text-[11.5px] text-slate-900 space-y-0.5 leading-snug mt-0.5">
+                {proj.bullets.map((b, bIdx) => (
+                  <li key={bIdx}>{b}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* HONORS & AWARDS (AUTO-HIDES IF EMPTY) */}
+      {resumeData.awards && resumeData.awards.length > 0 && (
+        <div className="mb-3">
+          <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Honors & Awards</h2>
+          {resumeData.awards.map((award) => (
+            <div key={award.id} className="mb-1.5">
+              <div className="flex justify-between items-baseline text-[12.5px] text-black font-bold">
+                <span>{award.title} {award.issuer ? `— ${award.issuer}` : ''}</span>
+                <span className="text-[12px] font-normal">{award.dates}</span>
+              </div>
+              {award.details && (
+                <p className="text-[11.5px] text-slate-800 pl-3 leading-snug mt-0.5">• {award.details}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* TECHNICAL SKILLS */}
+      <div>
+        <h2 className="text-[14px] font-bold uppercase tracking-wider text-black border-b border-black pb-0.5 mb-1.5">Technical Skills</h2>
+        <div className="text-[12px] text-slate-900 space-y-1">
+          {resumeData.skills.languages && <div><strong className="font-bold text-black">Languages:</strong> {resumeData.skills.languages}</div>}
+          {resumeData.skills.frameworks && <div><strong className="font-bold text-black">Frameworks / Tech:</strong> {resumeData.skills.frameworks}</div>}
+          {resumeData.skills.tools && <div><strong className="font-bold text-black">Developer Tools:</strong> {resumeData.skills.tools}</div>}
+          {resumeData.skills.soft && <div><strong className="font-bold text-black">Soft Skills:</strong> {resumeData.skills.soft}</div>}
+          {resumeData.skills.certifications && <div><strong className="font-bold text-black">Certifications:</strong> {resumeData.skills.certifications}</div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// TEMPLATE 2: MODERN MINIMAL PREVIEW
+// -------------------------------------------------------------
+function ModernMinimalPreview({ resumeData }) {
+  return (
+    <div className="font-sans leading-relaxed text-slate-900 space-y-5">
+      <div className="border-b-2 border-indigo-600 pb-4">
+        <h1 className="text-3xl font-black tracking-tight text-slate-950 uppercase">{resumeData.personal.fullName}</h1>
+        <p className="text-xs text-indigo-600 font-bold uppercase tracking-widest mt-1">{resumeData.personal.location}</p>
+        <div className="flex flex-wrap gap-4 text-xs text-slate-600 pt-2 font-medium">
+          {resumeData.personal.email && <span>{resumeData.personal.email}</span>}
+          {resumeData.personal.phone && <span>{resumeData.personal.phone}</span>}
+          {resumeData.personal.linkedin && <span>{resumeData.personal.linkedin}</span>}
+          {resumeData.personal.github && <span>{resumeData.personal.github}</span>}
+        </div>
+      </div>
+
+      <div>
+        <h2 className="text-xs font-black uppercase tracking-widest text-indigo-600 mb-2">Education</h2>
+        {resumeData.education.map((edu) => (
+          <div key={edu.id} className="mb-2">
+            <div className="flex justify-between text-xs font-bold text-slate-950">
+              <span>{edu.institution}</span>
+              <span>{edu.dates}</span>
+            </div>
+            <div className="text-xs text-slate-700 italic">
+              {edu.degree} in {edu.branch} {edu.cgpa ? `(CGPA: ${edu.cgpa})` : ''}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {resumeData.experience.length > 0 && (
+        <div>
+          <h2 className="text-xs font-black uppercase tracking-widest text-indigo-600 mb-2">Work Experience</h2>
+          {resumeData.experience.map((exp) => (
+            <div key={exp.id} className="mb-3 space-y-1">
+              <div className="flex justify-between text-xs font-bold text-slate-950">
+                <span>{exp.title} — {exp.company}</span>
+                <span className="font-normal text-slate-500">{exp.dates}</span>
+              </div>
+              <ul className="list-disc pl-4 text-[11.5px] text-slate-700 space-y-1">
+                {exp.bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {resumeData.projects.length > 0 && (
+        <div>
+          <h2 className="text-xs font-black uppercase tracking-widest text-indigo-600 mb-2">Projects</h2>
+          {resumeData.projects.map((proj) => (
+            <div key={proj.id} className="mb-2 space-y-1">
+              <div className="flex justify-between text-xs font-bold text-slate-950">
+                <span>{proj.name} <span className="font-normal text-slate-500">({proj.tech})</span></span>
+                <span className="font-normal text-slate-500">{proj.dates}</span>
+              </div>
+              <ul className="list-disc pl-4 text-[11.5px] text-slate-700 space-y-0.5">
+                {proj.bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div>
+        <h2 className="text-xs font-black uppercase tracking-widest text-indigo-600 mb-2">Technical Competencies</h2>
+        <div className="text-[11.5px] text-slate-800 space-y-1">
+          <div><strong className="text-slate-950">Languages & Tools:</strong> {resumeData.skills.languages}</div>
+          <div><strong className="text-slate-950">Frameworks:</strong> {resumeData.skills.frameworks}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// TEMPLATE 3: EXECUTIVE SPLIT PREVIEW
+// -------------------------------------------------------------
+function ExecutiveSplitPreview({ resumeData }) {
+  return (
+    <div className="font-sans grid grid-cols-12 gap-6 text-slate-900 leading-normal">
+      <div className="col-span-12 border-b border-slate-300 pb-3">
+        <h1 className="text-3xl font-extrabold text-slate-950 tracking-tight">{resumeData.personal.fullName}</h1>
+        <p className="text-xs text-slate-600 font-semibold">{resumeData.personal.location} | {resumeData.personal.email} | {resumeData.personal.phone}</p>
+      </div>
+
+      <div className="col-span-8 space-y-4">
+        <div>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-2">Experience</h2>
+          {resumeData.experience.map((exp) => (
+            <div key={exp.id} className="mb-3 space-y-1">
+              <div className="flex justify-between text-xs font-bold text-slate-950">
+                <span>{exp.title}</span>
+                <span className="text-[11px] font-normal text-slate-600">{exp.dates}</span>
+              </div>
+              <p className="text-[11.5px] italic text-slate-700">{exp.company}</p>
+              <ul className="list-disc pl-4 text-[11px] text-slate-800 space-y-0.5">
+                {exp.bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        <div>
+          <h2 className="text-xs font-bold uppercase tracking-wider text-slate-900 border-b border-slate-200 pb-1 mb-2">Key Projects</h2>
+          {resumeData.projects.map((proj) => (
+            <div key={proj.id} className="mb-2">
+              <span className="text-xs font-bold text-slate-950 block">{proj.name}</span>
+              <ul className="list-disc pl-4 text-[11px] text-slate-800 space-y-0.5">
+                {proj.bullets.map((b, i) => <li key={i}>{b}</li>)}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div className="col-span-4 bg-slate-50 p-4 rounded-lg space-y-4 border border-slate-200">
+        <div>
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-900 mb-1">Education</h2>
+          {resumeData.education.map((edu) => (
+            <div key={edu.id} className="text-[11px] text-slate-800 space-y-0.5 mb-2">
+              <span className="font-bold block">{edu.institution}</span>
+              <span>{edu.degree}</span>
+              <span className="block text-slate-600 font-semibold">{edu.cgpa}</span>
+            </div>
+          ))}
+        </div>
+
+        <div>
+          <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-900 mb-1">Skills</h2>
+          <p className="text-[11px] text-slate-700">{resumeData.skills.languages}</p>
+        </div>
+
+        {resumeData.skills.certifications && (
+          <div>
+            <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-900 mb-1">Certifications</h2>
+            <p className="text-[11px] text-slate-700">{resumeData.skills.certifications}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// -------------------------------------------------------------
+// PDF / RESUME UPLOAD ATS CHECKER SUITE
 // -------------------------------------------------------------
 function AtsCheckerSuite({ resumeData, showToast }) {
   const [jdText, setJdText] = useState("");
@@ -898,8 +1188,6 @@ function AtsCheckerSuite({ resumeData, showToast }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        
-        {/* PDF UPLOADER BOX */}
         <div 
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
@@ -927,7 +1215,6 @@ function AtsCheckerSuite({ resumeData, showToast }) {
           )}
         </div>
 
-        {/* JOB DESCRIPTION INPUT */}
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col space-y-3">
           <label className="text-xs font-bold uppercase text-slate-300 tracking-wider flex items-center gap-2">
             <Briefcase className="w-4 h-4 text-indigo-400" />
@@ -941,7 +1228,6 @@ function AtsCheckerSuite({ resumeData, showToast }) {
             className="w-full flex-1 bg-slate-950 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 focus:outline-none focus:border-indigo-500"
           />
         </div>
-
       </div>
 
       <button
@@ -960,7 +1246,6 @@ function AtsCheckerSuite({ resumeData, showToast }) {
         )}
       </button>
 
-      {/* ANALYSIS RESULTS BOARD */}
       {analysis && (
         <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-6 animate-fadeIn">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-800 pb-6">
@@ -1026,7 +1311,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
 }
 
 // -------------------------------------------------------------
-// 3. CAMPUS AMBASSADOR APPLICATION & ECOSYSTEM PORTAL
+// CAMPUS AMBASSADOR ECOSYSTEM PORTAL
 // -------------------------------------------------------------
 function CampusEcosystemView({ showToast }) {
   const [formData, setFormData] = useState({
@@ -1053,8 +1338,6 @@ function CampusEcosystemView({ showToast }) {
 
   return (
     <div className="max-w-5xl mx-auto px-4 py-12 space-y-12 animate-fadeIn">
-      
-      {/* HEADER HERO */}
       <div className="text-center space-y-4 max-w-2xl mx-auto">
         <span className="px-3 py-1 bg-indigo-500/10 text-indigo-400 border border-indigo-500/30 rounded-full text-xs font-bold uppercase tracking-wider">
           Student Leadership & Placements
@@ -1064,8 +1347,6 @@ function CampusEcosystemView({ showToast }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        
-        {/* LEFT: FORM */}
         <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 space-y-6">
           {submitted ? (
             <div className="text-center py-12 space-y-4 animate-fadeIn">
@@ -1135,7 +1416,6 @@ function CampusEcosystemView({ showToast }) {
           )}
         </div>
 
-        {/* RIGHT: LEADERBOARD & PERKS */}
         <div className="lg:col-span-5 space-y-6">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 space-y-4">
             <h3 className="text-sm font-bold uppercase text-indigo-400 tracking-wider flex items-center gap-2">
@@ -1178,8 +1458,7 @@ function CampusEcosystemView({ showToast }) {
             </div>
           </div>
         </div>
-
       </div>
     </div>
   );
-} 
+}
