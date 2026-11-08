@@ -3,7 +3,7 @@ import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
   GraduationCap, RefreshCw, Trophy, Send, CheckCircle, AlertCircle, Printer, Eye,
-  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus
+  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, Sliders, ChevronRight
 } from 'lucide-react';
 
 const INITIAL_RESUME_DATA = {
@@ -96,12 +96,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased">
+    <div className="min-h-screen bg-slate-50/70 text-slate-900 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased relative overflow-x-hidden">
       
-      {/* Toast Notification */}
+      {/* Toast Notification with Dynamic Slide & Bounce Animation */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-5 py-3 rounded-xl shadow-2xl flex items-center gap-3 border border-slate-700 animate-bounce">
-          <Sparkles className="w-5 h-5 text-indigo-400 flex-shrink-0 animate-spin" />
+        <div className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-indigo-500/30 animate-bounce">
+          <Sparkles className="w-5 h-5 text-amber-300 flex-shrink-0 animate-spin" />
           <span className="text-sm font-semibold">{toastMessage}</span>
         </div>
       )}
@@ -112,61 +112,61 @@ export default function App() {
       )}
 
       {/* HEADER NAVBAR */}
-      <header className="sticky top-0 z-40 bg-white border-b border-slate-200 transition-all print:hidden shadow-sm">
+      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 transition-all print:hidden shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigateTo('landing')}>
-            <div className="w-9 h-9 rounded-xl bg-indigo-600 flex items-center justify-center font-bold text-xl text-white shadow-md group-hover:scale-105 transition">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 flex items-center justify-center font-bold text-xl text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
               A
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-black tracking-tight text-slate-900 flex items-center gap-2">
-                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200">Career OS</span>
+                Aspiraa <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full bg-indigo-50 text-indigo-600 border border-indigo-200/80 shadow-sm">Career OS</span>
               </span>
             </div>
           </div>
 
-          <nav className="hidden lg:flex items-center gap-2 text-sm font-medium text-slate-600">
+          <nav className="hidden lg:flex items-center gap-1 text-sm font-medium text-slate-600">
             <button 
               onClick={() => navigateTo('landing')} 
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-2 ${activeTab === 'landing' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}
+              className={`px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${activeTab === 'landing' ? 'text-indigo-600 bg-indigo-50/80 font-bold shadow-sm border border-indigo-100' : 'hover:text-slate-900 hover:bg-slate-100/80'}`}
             >
               <Layout className="w-4 h-4 text-indigo-600" />
               Home
             </button>
             <button 
               onClick={() => navigateTo('builder')} 
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-2 ${activeTab === 'builder' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}
+              className={`px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${activeTab === 'builder' ? 'text-indigo-600 bg-indigo-50/80 font-bold shadow-sm border border-indigo-100' : 'hover:text-slate-900 hover:bg-slate-100/80'}`}
             >
               <FileText className="w-4 h-4 text-indigo-600" />
               Resume Builder
             </button>
             <button 
               onClick={() => navigateTo('ats')} 
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-2 ${activeTab === 'ats' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}
+              className={`px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${activeTab === 'ats' ? 'text-indigo-600 bg-indigo-50/80 font-bold shadow-sm border border-indigo-100' : 'hover:text-slate-900 hover:bg-slate-100/80'}`}
             >
               <Upload className="w-4 h-4 text-emerald-600" />
               ATS Scanner
             </button>
             <button 
               onClick={() => navigateTo('campus')} 
-              className={`px-3 py-1.5 rounded-lg transition flex items-center gap-2 ${activeTab === 'campus' ? 'text-indigo-600 bg-indigo-50 font-bold' : 'hover:text-slate-900 hover:bg-slate-100'}`}
+              className={`px-3.5 py-2 rounded-xl transition-all duration-200 flex items-center gap-2 ${activeTab === 'campus' ? 'text-indigo-600 bg-indigo-50/80 font-bold shadow-sm border border-indigo-100' : 'hover:text-slate-900 hover:bg-slate-100/80'}`}
             >
               <GraduationCap className="w-4 h-4 text-indigo-600" />
-              Campus Ambassador
+              Campus Lead
             </button>
           </nav>
 
           <div className="hidden sm:flex items-center gap-3">
             <button 
               onClick={() => setAuthModal('signin')}
-              className="px-4 py-2 text-xs font-bold text-slate-700 hover:text-slate-900 transition flex items-center gap-1.5"
+              className="px-4 py-2 text-xs font-bold text-slate-700 hover:text-indigo-600 transition flex items-center gap-1.5"
             >
               <LogIn className="w-4 h-4 text-slate-500" />
               Sign In
             </button>
             <button 
               onClick={() => setAuthModal('signup')}
-              className="px-4 py-2 text-xs font-bold rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm transition flex items-center gap-1.5"
+              className="px-4.5 py-2 text-xs font-bold rounded-xl bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white shadow-md shadow-indigo-500/20 hover:shadow-lg transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center gap-1.5"
             >
               <UserPlus className="w-4 h-4" />
               Sign Up Free
@@ -174,27 +174,27 @@ export default function App() {
           </div>
 
           <div className="lg:hidden flex items-center gap-2">
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-lg bg-slate-100 text-slate-700 hover:text-slate-900">
+            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 rounded-xl bg-slate-100 text-slate-700 hover:text-slate-900">
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="lg:hidden border-b border-slate-200 bg-white px-4 pt-2 pb-6 space-y-2 text-sm font-medium">
-            <button onClick={() => navigateTo('landing')} className="block w-full text-left px-3 py-2 rounded bg-slate-100 font-bold text-slate-900">Home</button>
-            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded text-slate-700 hover:bg-slate-100">Resume Builder</button>
-            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded text-slate-700 hover:bg-slate-100">ATS Scanner</button>
-            <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded text-indigo-600 font-bold">Campus Ambassador</button>
+          <div className="lg:hidden border-b border-slate-200 bg-white/95 backdrop-blur-md px-4 pt-2 pb-6 space-y-2 text-sm font-medium animate-fadeIn">
+            <button onClick={() => navigateTo('landing')} className="block w-full text-left px-3 py-2 rounded-xl bg-slate-100 font-bold text-slate-900">Home</button>
+            <button onClick={() => navigateTo('builder')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100">Resume Builder</button>
+            <button onClick={() => navigateTo('ats')} className="block w-full text-left px-3 py-2 rounded-xl text-slate-700 hover:bg-slate-100">ATS Scanner</button>
+            <button onClick={() => navigateTo('campus')} className="block w-full text-left px-3 py-2 rounded-xl text-indigo-600 font-bold">Campus Ambassador</button>
             <div className="pt-2 flex gap-2">
-              <button onClick={() => setAuthModal('signin')} className="w-1/2 py-2 text-xs font-bold border border-slate-300 rounded-lg text-slate-800">Sign In</button>
-              <button onClick={() => setAuthModal('signup')} className="w-1/2 py-2 text-xs font-bold bg-indigo-600 text-white rounded-lg">Sign Up</button>
+              <button onClick={() => setAuthModal('signin')} className="w-1/2 py-2.5 text-xs font-bold border border-slate-300 rounded-xl text-slate-800">Sign In</button>
+              <button onClick={() => setAuthModal('signup')} className="w-1/2 py-2.5 text-xs font-bold bg-indigo-600 text-white rounded-xl shadow-md">Sign Up</button>
             </div>
           </div>
         )}
       </header>
 
-      {/* DYNAMIC VIEWS */}
+      {/* DYNAMIC MAIN CONTENT VIEWS */}
       <main className="flex-1">
         {activeTab === 'landing' && <HeroLandingView navigateTo={navigateTo} setAuthModal={setAuthModal} />}
         {activeTab === 'builder' && (
@@ -210,7 +210,7 @@ export default function App() {
         {activeTab === 'campus' && <CampusEcosystemView showToast={showToast} />}
       </main>
 
-      <footer className="border-t border-slate-200 bg-white text-slate-500 text-xs py-8 print:hidden text-center">
+      <footer className="border-t border-slate-200/80 bg-white text-slate-500 text-xs py-8 print:hidden text-center">
         <p>© {new Date().getFullYear()} Aspiraa Career OS. High-Impact Placement Platform for Engineering Students.</p>
       </footer>
     </div>
@@ -218,7 +218,7 @@ export default function App() {
 }
 
 // -------------------------------------------------------------
-// SIGN IN / SIGN UP MODAL COMPONENT
+// SIGN IN / SIGN UP MODAL COMPONENT (ANIMATED POPUP)
 // -------------------------------------------------------------
 function AuthModal({ type, onClose, showToast }) {
   const [email, setEmail] = useState('');
@@ -232,13 +232,16 @@ function AuthModal({ type, onClose, showToast }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center p-4 animate-fadeIn">
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative">
-        <button onClick={onClose} className="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+    <div className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 transition-all duration-300">
+      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-2xl max-w-md w-full p-6 sm:p-8 space-y-6 relative transform transition-all scale-100 animate-fadeIn">
+        <button onClick={onClose} className="absolute top-5 right-5 text-slate-400 hover:text-slate-700 transition rounded-full p-1 hover:bg-slate-100">
           <X className="w-5 h-5" />
         </button>
 
         <div className="space-y-1 text-center">
+          <div className="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
+            <UserCheck className="w-6 h-6" />
+          </div>
           <h2 className="text-2xl font-black text-slate-900">
             {type === 'signin' ? "Welcome Back to Aspiraa" : "Create Your Free Account"}
           </h2>
@@ -257,7 +260,7 @@ function AuthModal({ type, onClose, showToast }) {
                 value={name} 
                 onChange={(e) => setName(e.target.value)} 
                 placeholder="Student Name"
-                className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition"
               />
             </div>
           )}
@@ -270,7 +273,7 @@ function AuthModal({ type, onClose, showToast }) {
               value={email} 
               onChange={(e) => setEmail(e.target.value)} 
               placeholder="student@college.edu"
-              className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition"
             />
           </div>
 
@@ -282,13 +285,13 @@ function AuthModal({ type, onClose, showToast }) {
               value={password} 
               onChange={(e) => setPassword(e.target.value)} 
               placeholder="••••••••"
-              className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+              className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition"
             />
           </div>
 
           <button 
             type="submit" 
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-md transition"
+            className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-indigo-500/20 hover:shadow-indigo-500/30 transition transform hover:-translate-y-0.5 active:translate-y-0"
           >
             {type === 'signin' ? "Sign In" : "Get Started Now"}
           </button>
@@ -299,23 +302,26 @@ function AuthModal({ type, onClose, showToast }) {
 }
 
 // -------------------------------------------------------------
-// HERO LANDING PAGE VIEW (CLEAN LIGHT THEME)
+// HERO LANDING PAGE VIEW (DYNAMIC LIGHT DESIGN & GLOW EFFECTS)
 // -------------------------------------------------------------
 function HeroLandingView({ navigateTo, setAuthModal }) {
   return (
-    <div className="space-y-16 pb-16 animate-fadeIn">
+    <div className="space-y-20 pb-20 animate-fadeIn">
       
-      {/* HERO BANNER SECTION */}
-      <section className="pt-16 pb-12 border-b border-slate-200 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 text-xs font-bold">
-            <Sparkles className="w-4 h-4 text-indigo-600" />
+      {/* HERO BANNER SECTION WITH AMBIENT GLOW EFFECTS */}
+      <section className="pt-20 pb-16 border-b border-slate-200/80 bg-gradient-to-b from-white via-indigo-50/20 to-white relative overflow-hidden">
+        {/* Ambient Gradient Blur Background Orbs */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-gradient-to-tr from-indigo-200/40 via-sky-200/40 to-emerald-100/30 blur-[120px] rounded-full pointer-events-none" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-indigo-50/90 border border-indigo-200/80 text-indigo-700 text-xs font-bold shadow-sm hover:scale-105 transition transform">
+            <Sparkles className="w-4 h-4 text-indigo-600 animate-spin" />
             <span>The Open Source Career OS for College Students</span>
           </div>
 
-          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.15] max-w-4xl mx-auto">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 tracking-tight leading-[1.12] max-w-4xl mx-auto">
             Build ATS Resumes That <br />
-            <span className="text-indigo-600">Land Campus Interviews.</span>
+            <span className="bg-gradient-to-r from-indigo-600 via-sky-600 to-indigo-700 bg-clip-text text-transparent">Land Campus Interviews.</span>
           </h1>
 
           <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
@@ -325,7 +331,7 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-2">
             <button 
               onClick={() => navigateTo('builder')}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm tracking-wide shadow-md flex items-center justify-center gap-2 transition"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-sky-600 hover:from-indigo-500 hover:to-sky-500 text-white font-bold text-sm tracking-wide shadow-xl shadow-indigo-500/25 flex items-center justify-center gap-2 transition transform hover:-translate-y-1 active:translate-y-0"
             >
               <span>Build My Resume Now</span>
               <ArrowRight className="w-4 h-4" />
@@ -333,28 +339,28 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
 
             <button 
               onClick={() => setAuthModal('signup')}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-sm flex items-center justify-center gap-2 transition"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-white hover:bg-slate-100 text-slate-800 border border-slate-300/80 font-bold text-sm shadow-md flex items-center justify-center gap-2 transition transform hover:-translate-y-0.5"
             >
               <UserPlus className="w-4 h-4 text-indigo-600" />
               <span>Create Free Account</span>
             </button>
           </div>
 
-          {/* STATS STRIP */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-10 max-w-4xl mx-auto border-t border-slate-200">
-            <div>
+          {/* DYNAMIC STATS STRIP */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 pt-12 max-w-4xl mx-auto border-t border-slate-200/80">
+            <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-sm border border-slate-200/60 shadow-sm hover:shadow-md transition">
               <span className="block text-3xl font-black text-slate-900">99%</span>
               <span className="text-xs text-slate-500 font-semibold">ATS Parsing Score</span>
             </div>
-            <div>
+            <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-sm border border-slate-200/60 shadow-sm hover:shadow-md transition">
               <span className="block text-3xl font-black text-indigo-600">3+</span>
               <span className="text-xs text-slate-500 font-semibold">Proven Layout Templates</span>
             </div>
-            <div>
+            <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-sm border border-slate-200/60 shadow-sm hover:shadow-md transition">
               <span className="block text-3xl font-black text-emerald-600">100%</span>
-              <span className="text-xs text-slate-500 font-semibold">Free & Unlimited Downloads</span>
+              <span className="text-xs text-slate-500 font-semibold">Free & Open Source</span>
             </div>
-            <div>
+            <div className="p-4 rounded-2xl bg-white/60 backdrop-blur-sm border border-slate-200/60 shadow-sm hover:shadow-md transition">
               <span className="block text-3xl font-black text-sky-600">50+</span>
               <span className="text-xs text-slate-500 font-semibold">Campus Networks</span>
             </div>
@@ -362,35 +368,35 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
         </div>
       </section>
 
-      {/* FEATURE CARDS */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+      {/* FEATURE CARDS WITH HOVER ANIMATIONS */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         <div className="text-center space-y-2">
           <h2 className="text-2xl sm:text-4xl font-black text-slate-900">Built Specifically for Engineering Placements</h2>
           <p className="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">Clean structure, single-page printable layouts, and instant keyword match audits.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-sm hover:border-indigo-300 transition">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-              <Layers className="w-5 h-5" />
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-8 bg-white border border-slate-200/80 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold shadow-inner group-hover:scale-110 transition">
+              <Layers className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Jake's ATS & Modern Layouts</h3>
+            <h3 className="text-lg font-bold text-slate-900">Jake's ATS & Modern Layouts</h3>
             <p className="text-xs text-slate-600 leading-relaxed">Single-column design preferred by tech recruiters and automated ATS screeners globally.</p>
           </div>
 
-          <div className="p-6 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-sm hover:border-indigo-300 transition">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
-              <Zap className="w-5 h-5" />
+          <div className="p-8 bg-white border border-slate-200/80 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold shadow-inner group-hover:scale-110 transition">
+              <Zap className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Job Description Keyword Audit</h3>
+            <h3 className="text-lg font-bold text-slate-900">Job Description Keyword Audit</h3>
             <p className="text-xs text-slate-600 leading-relaxed">Paste target job descriptions to check missing skills and optimize match percentages.</p>
           </div>
 
-          <div className="p-6 bg-white border border-slate-200 rounded-2xl space-y-3 shadow-sm hover:border-indigo-300 transition">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold">
-              <ShieldCheck className="w-5 h-5" />
+          <div className="p-8 bg-white border border-slate-200/80 rounded-3xl space-y-4 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 group">
+            <div className="w-12 h-12 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold shadow-inner group-hover:scale-110 transition">
+              <ShieldCheck className="w-6 h-6" />
             </div>
-            <h3 className="text-base font-bold text-slate-900">Campus Ambassador Network</h3>
+            <h3 className="text-lg font-bold text-slate-900">Campus Ambassador Network</h3>
             <p className="text-xs text-slate-600 leading-relaxed">Lead placement drives at your institution, track student registrations, and gain credentials.</p>
           </div>
         </div>
@@ -401,7 +407,7 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
 }
 
 // -------------------------------------------------------------
-// RESUME BUILDER STUDIO WITH TEMPLATES (LIGHT THEME)
+// RESUME BUILDER STUDIO WITH DYNAMIC PREVIEWS
 // -------------------------------------------------------------
 function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSelectedTemplate, showToast }) {
   const [activeSection, setActiveSection] = useState('personal');
@@ -577,10 +583,10 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
   };
 
   return (
-    <div className="max-w-[1700px] mx-auto px-4 py-6 space-y-6">
+    <div className="max-w-[1700px] mx-auto px-4 py-6 space-y-6 animate-fadeIn">
       
       {/* Top Banner Actions & Template Switcher */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border border-slate-200 p-4 rounded-xl shadow-sm print:hidden">
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 bg-white border border-slate-200/80 p-5 rounded-2xl shadow-sm print:hidden">
         <div>
           <h1 className="text-lg font-black text-slate-900 flex items-center gap-2">
             <FileText className="w-5 h-5 text-indigo-600" />
@@ -590,28 +596,28 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
-          <div className="bg-slate-100 p-1 rounded-lg border border-slate-200 flex items-center gap-1">
+          <div className="bg-slate-100/90 p-1 rounded-xl border border-slate-200 flex items-center gap-1">
             <button
               onClick={() => { setSelectedTemplate('jakes'); showToast("Switched to Jake's Classic ATS Template"); }}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition ${selectedTemplate === 'jakes' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${selectedTemplate === 'jakes' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Jake's ATS Classic
             </button>
             <button
               onClick={() => { setSelectedTemplate('modern'); showToast("Switched to Modern Minimalist Template"); }}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition ${selectedTemplate === 'modern' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${selectedTemplate === 'modern' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Modern Minimalist
             </button>
             <button
               onClick={() => { setSelectedTemplate('executive'); showToast("Switched to Executive Split Template"); }}
-              className={`px-3 py-1 rounded-md text-xs font-bold transition ${selectedTemplate === 'executive' ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all duration-200 ${selectedTemplate === 'executive' ? 'bg-indigo-600 text-white shadow-md' : 'text-slate-600 hover:text-slate-900'}`}
             >
               Executive Split
             </button>
           </div>
 
-          <button onClick={() => window.print()} className="px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-sm transition">
+          <button onClick={() => window.print()} className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center gap-2 shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
             <Printer className="w-4 h-4" /> Print / Save PDF
           </button>
         </div>
@@ -620,7 +626,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* LEFT COLUMN: EDIT FORM CONTROLS */}
-        <div className="lg:col-span-5 bg-white border border-slate-200 rounded-xl p-5 space-y-5 print:hidden max-h-[85vh] overflow-y-auto custom-scrollbar shadow-sm">
+        <div className="lg:col-span-5 bg-white border border-slate-200/80 rounded-2xl p-6 space-y-6 print:hidden max-h-[85vh] overflow-y-auto custom-scrollbar shadow-sm">
           
           {/* Section Navigation Pills */}
           <div className="flex flex-wrap gap-1.5 border-b border-slate-200 pb-3">
@@ -628,7 +634,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
               <button
                 key={sec}
                 onClick={() => setActiveSection(sec)}
-                className={`px-3 py-1 rounded-md text-xs font-bold uppercase tracking-wider transition ${activeSection === sec ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:text-slate-900'}`}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all duration-200 ${activeSection === sec ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-100 text-slate-600 hover:text-slate-900'}`}
               >
                 {sec}
               </button>
@@ -637,40 +643,40 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
 
           {/* 1. PERSONAL INFO */}
           {activeSection === 'personal' && (
-            <div className="space-y-3 animate-fadeIn">
+            <div className="space-y-4 animate-fadeIn">
               <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Header & Contact Details</h3>
               <div className="space-y-3">
                 <div>
                   <label className="text-slate-600 text-xs block mb-1 font-semibold">Full Name *</label>
-                  <input type="text" value={resumeData.personal.fullName} onChange={(e) => handlePersonalChange('fullName', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                  <input type="text" value={resumeData.personal.fullName} onChange={(e) => handlePersonalChange('fullName', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                 </div>
                 <div>
                   <label className="text-slate-600 text-xs block mb-1 font-semibold">City, State / Address</label>
-                  <input type="text" value={resumeData.personal.location} onChange={(e) => handlePersonalChange('location', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                  <input type="text" value={resumeData.personal.location} onChange={(e) => handlePersonalChange('location', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">Phone Number</label>
-                    <input type="text" value={resumeData.personal.phone} onChange={(e) => handlePersonalChange('phone', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                    <input type="text" value={resumeData.personal.phone} onChange={(e) => handlePersonalChange('phone', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">Email Address</label>
-                    <input type="text" value={resumeData.personal.email} onChange={(e) => handlePersonalChange('email', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                    <input type="text" value={resumeData.personal.email} onChange={(e) => handlePersonalChange('email', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">LinkedIn Profile URL</label>
-                    <input type="text" value={resumeData.personal.linkedin} onChange={(e) => handlePersonalChange('linkedin', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                    <input type="text" value={resumeData.personal.linkedin} onChange={(e) => handlePersonalChange('linkedin', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                   </div>
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">GitHub Profile URL</label>
-                    <input type="text" value={resumeData.personal.github} onChange={(e) => handlePersonalChange('github', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                    <input type="text" value={resumeData.personal.github} onChange={(e) => handlePersonalChange('github', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                   </div>
                 </div>
                 <div>
                   <label className="text-slate-600 text-xs block mb-1 font-semibold">Portfolio Website (Optional)</label>
-                  <input type="text" value={resumeData.personal.portfolio || ""} onChange={(e) => handlePersonalChange('portfolio', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900 focus:border-indigo-600 focus:outline-none" />
+                  <input type="text" value={resumeData.personal.portfolio || ""} onChange={(e) => handlePersonalChange('portfolio', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
                 </div>
               </div>
             </div>
@@ -681,13 +687,13 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             <div className="space-y-3 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Education & CGPA</h3>
-                <button onClick={addEducation} className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                <button onClick={addEducation} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition">
                   <Plus className="w-3.5 h-3.5" /> Add
                 </button>
               </div>
 
               {resumeData.education.map((edu, idx) => (
-                <div key={edu.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 relative">
+                <div key={edu.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 relative">
                   {resumeData.education.length > 1 && (
                     <button onClick={() => removeEducation(idx)} className="absolute top-2 right-2 text-slate-400 hover:text-rose-600">
                       <Trash2 className="w-4 h-4" />
@@ -695,32 +701,32 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                   )}
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">University / College *</label>
-                    <input type="text" value={edu.institution} onChange={(e) => handleEduChange(idx, 'institution', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                    <input type="text" value={edu.institution} onChange={(e) => handleEduChange(idx, 'institution', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Degree</label>
-                      <input type="text" value={edu.degree} onChange={(e) => handleEduChange(idx, 'degree', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={edu.degree} onChange={(e) => handleEduChange(idx, 'degree', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Branch / Major</label>
-                      <input type="text" value={edu.branch || ""} onChange={(e) => handleEduChange(idx, 'branch', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={edu.branch || ""} onChange={(e) => handleEduChange(idx, 'branch', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2">
                     <div>
                       <label className="text-slate-900 text-xs block mb-1 font-bold">CGPA / GPA</label>
-                      <input type="text" value={edu.cgpa || ""} onChange={(e) => handleEduChange(idx, 'cgpa', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs font-bold text-slate-900" />
+                      <input type="text" value={edu.cgpa || ""} onChange={(e) => handleEduChange(idx, 'cgpa', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs font-bold text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Dates</label>
-                      <input type="text" value={edu.dates} onChange={(e) => handleEduChange(idx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={edu.dates} onChange={(e) => handleEduChange(idx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Location</label>
-                      <input type="text" value={edu.location} onChange={(e) => handleEduChange(idx, 'location', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={edu.location} onChange={(e) => handleEduChange(idx, 'location', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                   </div>
                 </div>
@@ -738,7 +744,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                   rows={4}
                   value={resumeData.coursework.join(', ')}
                   onChange={(e) => handleCourseworkChange(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 font-mono focus:border-indigo-600 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 font-mono focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition"
                 />
               </div>
             </div>
@@ -749,13 +755,13 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             <div className="space-y-4 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Work Experience</h3>
-                <button onClick={addExperience} className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                <button onClick={addExperience} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition">
                   <Plus className="w-3.5 h-3.5" /> Add Role
                 </button>
               </div>
 
               {resumeData.experience.map((exp, expIdx) => (
-                <div key={exp.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 relative">
+                <div key={exp.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 relative">
                   <button onClick={() => removeExperience(expIdx)} className="absolute top-2 right-2 text-slate-400 hover:text-rose-600">
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -763,22 +769,22 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Company</label>
-                      <input type="text" value={exp.company} onChange={(e) => handleExpChange(expIdx, 'company', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={exp.company} onChange={(e) => handleExpChange(expIdx, 'company', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Job Title</label>
-                      <input type="text" value={exp.title} onChange={(e) => handleExpChange(expIdx, 'title', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={exp.title} onChange={(e) => handleExpChange(expIdx, 'title', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Dates</label>
-                      <input type="text" value={exp.dates} onChange={(e) => handleExpChange(expIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={exp.dates} onChange={(e) => handleExpChange(expIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Location</label>
-                      <input type="text" value={exp.location} onChange={(e) => handleExpChange(expIdx, 'location', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={exp.location} onChange={(e) => handleExpChange(expIdx, 'location', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                   </div>
 
@@ -793,7 +799,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                           rows={2}
                           value={b}
                           onChange={(e) => handleExpBulletChange(expIdx, bIdx, e.target.value)}
-                          className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900 resize-none"
+                          className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900 resize-none"
                         />
                         <button onClick={() => removeExpBullet(expIdx, bIdx)} className="text-slate-400 hover:text-rose-600 pt-1">
                           <X className="w-4 h-4" />
@@ -811,13 +817,13 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
             <div className="space-y-4 animate-fadeIn">
               <div className="flex items-center justify-between">
                 <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Projects</h3>
-                <button onClick={addProject} className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                <button onClick={addProject} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition">
                   <Plus className="w-3.5 h-3.5" /> Add Project
                 </button>
               </div>
 
               {resumeData.projects.map((proj, projIdx) => (
-                <div key={proj.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 relative">
+                <div key={proj.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 relative">
                   <button onClick={() => removeProject(projIdx)} className="absolute top-2 right-2 text-slate-400 hover:text-rose-600">
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -825,17 +831,17 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Project Name</label>
-                      <input type="text" value={proj.name} onChange={(e) => handleProjChange(projIdx, 'name', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={proj.name} onChange={(e) => handleProjChange(projIdx, 'name', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Date</label>
-                      <input type="text" value={proj.dates} onChange={(e) => handleProjChange(projIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={proj.dates} onChange={(e) => handleProjChange(projIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                   </div>
 
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">Tech Stack</label>
-                    <input type="text" value={proj.tech} onChange={(e) => handleProjChange(projIdx, 'tech', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                    <input type="text" value={proj.tech} onChange={(e) => handleProjChange(projIdx, 'tech', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                   </div>
 
                   <div className="space-y-1.5 pt-1">
@@ -849,7 +855,7 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                           rows={2}
                           value={b}
                           onChange={(e) => handleProjBulletChange(projIdx, bIdx, e.target.value)}
-                          className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900 resize-none"
+                          className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900 resize-none"
                         />
                         <button onClick={() => removeProjBullet(projIdx, bIdx)} className="text-slate-400 hover:text-rose-600 pt-1">
                           <X className="w-4 h-4" />
@@ -869,13 +875,13 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                 <div>
                   <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Honors & Awards (Optional)</h3>
                 </div>
-                <button onClick={addAward} className="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1">
+                <button onClick={addAward} className="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold flex items-center gap-1 shadow-sm transition">
                   <Plus className="w-3.5 h-3.5" /> Add
                 </button>
               </div>
 
               {(resumeData.awards || []).map((award, awardIdx) => (
-                <div key={award.id} className="p-3 bg-slate-50 rounded-lg border border-slate-200 space-y-2 relative">
+                <div key={award.id} className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2 relative">
                   <button onClick={() => removeAward(awardIdx)} className="absolute top-2 right-2 text-slate-400 hover:text-rose-600">
                     <Trash2 className="w-4 h-4" />
                   </button>
@@ -883,22 +889,22 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
                   <div className="grid grid-cols-2 gap-2">
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Title</label>
-                      <input type="text" value={award.title} onChange={(e) => handleAwardChange(awardIdx, 'title', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={award.title} onChange={(e) => handleAwardChange(awardIdx, 'title', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                     <div>
                       <label className="text-slate-600 text-xs block mb-1 font-semibold">Date</label>
-                      <input type="text" value={award.dates} onChange={(e) => handleAwardChange(awardIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                      <input type="text" value={award.dates} onChange={(e) => handleAwardChange(awardIdx, 'dates', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                     </div>
                   </div>
 
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">Issuer / Host</label>
-                    <input type="text" value={award.issuer} onChange={(e) => handleAwardChange(awardIdx, 'issuer', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                    <input type="text" value={award.issuer} onChange={(e) => handleAwardChange(awardIdx, 'issuer', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                   </div>
 
                   <div>
                     <label className="text-slate-600 text-xs block mb-1 font-semibold">Short Details</label>
-                    <input type="text" value={award.details} onChange={(e) => handleAwardChange(awardIdx, 'details', e.target.value)} className="w-full bg-white border border-slate-300 rounded-md p-2 text-xs text-slate-900" />
+                    <input type="text" value={award.details} onChange={(e) => handleAwardChange(awardIdx, 'details', e.target.value)} className="w-full bg-white border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
                   </div>
                 </div>
               ))}
@@ -911,31 +917,31 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
               <h3 className="text-xs font-bold uppercase text-indigo-600 tracking-wider">Skills & Certifications</h3>
               <div>
                 <label className="text-slate-600 text-xs block mb-1 font-semibold">Languages</label>
-                <input type="text" value={resumeData.skills.languages} onChange={(e) => handleSkillChange('languages', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
+                <input type="text" value={resumeData.skills.languages} onChange={(e) => handleSkillChange('languages', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
               </div>
               <div>
                 <label className="text-slate-600 text-xs block mb-1 font-semibold">Frameworks / Tech</label>
-                <input type="text" value={resumeData.skills.frameworks} onChange={(e) => handleSkillChange('frameworks', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
+                <input type="text" value={resumeData.skills.frameworks} onChange={(e) => handleSkillChange('frameworks', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
               </div>
               <div>
                 <label className="text-slate-600 text-xs block mb-1 font-semibold">Developer Tools</label>
-                <input type="text" value={resumeData.skills.tools} onChange={(e) => handleSkillChange('tools', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
+                <input type="text" value={resumeData.skills.tools} onChange={(e) => handleSkillChange('tools', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
               </div>
               <div>
                 <label className="text-slate-600 text-xs block mb-1 font-semibold">Soft Skills</label>
-                <input type="text" value={resumeData.skills.soft || ""} onChange={(e) => handleSkillChange('soft', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
+                <input type="text" value={resumeData.skills.soft || ""} onChange={(e) => handleSkillChange('soft', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
               </div>
               <div>
                 <label className="text-slate-600 text-xs block mb-1 font-semibold">Certifications</label>
-                <input type="text" value={resumeData.skills.certifications || ""} onChange={(e) => handleSkillChange('certifications', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2 text-xs text-slate-900" />
+                <input type="text" value={resumeData.skills.certifications || ""} onChange={(e) => handleSkillChange('certifications', e.target.value)} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none transition" />
               </div>
             </div>
           )}
 
         </div>
 
-        {/* RIGHT COLUMN: PREVIEW CONTAINER */}
-        <div className="lg:col-span-7 bg-white text-slate-950 rounded-xl p-10 shadow-lg min-h-[1050px] border border-slate-300 print:p-0 print:shadow-none print:border-none" id="resume-preview">
+        {/* RIGHT COLUMN: PREVIEW CONTAINER WITH DYNAMIC ANIMATIONS */}
+        <div className="lg:col-span-7 bg-white text-slate-950 rounded-2xl p-10 shadow-lg min-h-[1050px] border border-slate-200 print:p-0 print:shadow-none print:border-none transition-all duration-300 animate-fadeIn" id="resume-preview">
           
           {selectedTemplate === 'jakes' && <JakesClassicPreview resumeData={resumeData} />}
           {selectedTemplate === 'modern' && <ModernMinimalPreview resumeData={resumeData} />}
@@ -1183,7 +1189,7 @@ function ExecutiveSplitPreview({ resumeData }) {
         </div>
       </div>
 
-      <div className="col-span-4 bg-slate-50 p-4 rounded-lg space-y-4 border border-slate-200">
+      <div className="col-span-4 bg-slate-50 p-4 rounded-xl space-y-4 border border-slate-200">
         <div>
           <h2 className="text-[11px] font-bold uppercase tracking-wider text-slate-900 mb-1">Education</h2>
           {resumeData.education.map((edu) => (
@@ -1212,7 +1218,7 @@ function ExecutiveSplitPreview({ resumeData }) {
 }
 
 // -------------------------------------------------------------
-// ATS SCANNER SUITE (LIGHT THEME)
+// ATS SCANNER SUITE
 // -------------------------------------------------------------
 function AtsCheckerSuite({ resumeData, showToast }) {
   const [jdText, setJdText] = useState("");
@@ -1266,7 +1272,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 space-y-8 animate-fadeIn">
       <div className="text-center space-y-2">
-        <span className="px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full text-xs font-bold uppercase tracking-wider">
+        <span className="px-3.5 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200/80 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
           PDF & Resume ATS Scanner
         </span>
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900">Upload Resume & Check Match Score</h1>
@@ -1278,10 +1284,10 @@ function AtsCheckerSuite({ resumeData, showToast }) {
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current.click()}
-          className="bg-white border-2 border-dashed border-slate-300 hover:border-indigo-600 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition shadow-sm"
+          className="bg-white border-2 border-dashed border-slate-300 hover:border-indigo-600 rounded-2xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md group"
         >
           <input ref={fileInputRef} type="file" accept=".pdf,.docx,.doc" onChange={handleFileUpload} className="hidden" />
-          <div className="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3">
+          <div className="w-14 h-14 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-3 group-hover:scale-110 transition transform shadow-inner">
             <Upload className="w-6 h-6" />
           </div>
           {uploadedFile ? (
@@ -1299,7 +1305,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
           )}
         </div>
 
-        <div className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col space-y-2 shadow-sm">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-5 flex flex-col space-y-2 shadow-sm">
           <label className="text-xs font-bold text-slate-800 tracking-wider uppercase flex items-center gap-1.5">
             <Briefcase className="w-4 h-4 text-indigo-600" /> Target Job Description
           </label>
@@ -1308,7 +1314,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
             value={jdText}
             onChange={(e) => setJdText(e.target.value)}
             placeholder="Paste job description keywords here..."
-            className="w-full flex-1 bg-slate-50 border border-slate-300 rounded-lg p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600"
+            className="w-full flex-1 bg-slate-50 border border-slate-300 rounded-xl p-3 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition"
           />
         </div>
       </div>
@@ -1316,7 +1322,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
       <button
         onClick={runAnalysis}
         disabled={isScanning}
-        className="w-full py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm uppercase tracking-wider rounded-xl shadow-sm flex items-center justify-center gap-2 transition"
+        className="w-full py-4 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 text-white font-bold text-sm uppercase tracking-wider rounded-2xl shadow-lg shadow-indigo-500/20 flex items-center justify-center gap-2 transition transform hover:-translate-y-0.5 active:translate-y-0"
       >
         {isScanning ? (
           <>
@@ -1330,7 +1336,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
       </button>
 
       {analysis && (
-        <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-6 shadow-sm animate-fadeIn">
+        <div className="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-6 shadow-md animate-fadeIn">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-slate-200 pb-4">
             <div>
               <h3 className="text-lg font-black text-slate-900">ATS Audit Summary</h3>
@@ -1345,26 +1351,26 @@ function AtsCheckerSuite({ resumeData, showToast }) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200 space-y-2">
+            <div className="p-4 bg-emerald-50 rounded-xl border border-emerald-200/80 space-y-2">
               <h4 className="text-xs font-bold text-emerald-800 uppercase flex items-center gap-1.5">
                 <CheckCircle className="w-4 h-4" /> Matched Keywords
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {analysis.matchedKeywords.map((kw, i) => (
-                  <span key={i} className="px-2 py-0.5 bg-white text-emerald-800 border border-emerald-300 rounded text-xs font-semibold">
+                  <span key={i} className="px-2.5 py-1 bg-white text-emerald-800 border border-emerald-300 rounded-lg text-xs font-semibold shadow-sm">
                     {kw}
                   </span>
                 ))}
               </div>
             </div>
 
-            <div className="p-4 bg-rose-50 rounded-lg border border-rose-200 space-y-2">
+            <div className="p-4 bg-rose-50 rounded-xl border border-rose-200/80 space-y-2">
               <h4 className="text-xs font-bold text-rose-800 uppercase flex items-center gap-1.5">
                 <AlertCircle className="w-4 h-4" /> Missing Keywords
               </h4>
               <div className="flex flex-wrap gap-1.5">
                 {analysis.missingKeywords.map((kw, i) => (
-                  <span key={i} className="px-2 py-0.5 bg-white text-rose-800 border border-rose-300 rounded text-xs font-semibold">
+                  <span key={i} className="px-2.5 py-1 bg-white text-rose-800 border border-rose-300 rounded-lg text-xs font-semibold shadow-sm">
                     + {kw}
                   </span>
                 ))}
@@ -1378,7 +1384,7 @@ function AtsCheckerSuite({ resumeData, showToast }) {
 }
 
 // -------------------------------------------------------------
-// CAMPUS AMBASSADOR ECOSYSTEM (LIGHT THEME)
+// CAMPUS AMBASSADOR ECOSYSTEM
 // -------------------------------------------------------------
 function CampusEcosystemView({ showToast }) {
   const [formData, setFormData] = useState({
@@ -1406,7 +1412,7 @@ function CampusEcosystemView({ showToast }) {
   return (
     <div className="max-w-5xl mx-auto px-4 py-10 space-y-10 animate-fadeIn">
       <div className="text-center space-y-2 max-w-2xl mx-auto">
-        <span className="px-3 py-1 bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-full text-xs font-bold uppercase tracking-wider">
+        <span className="px-3.5 py-1 bg-indigo-100 text-indigo-700 border border-indigo-200/80 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm">
           Student Leadership Network
         </span>
         <h1 className="text-3xl sm:text-5xl font-black text-slate-900 tracking-tight">Become a Campus Lead</h1>
@@ -1414,13 +1420,13 @@ function CampusEcosystemView({ showToast }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-xl p-6 sm:p-8 space-y-6 shadow-sm">
+        <div className="lg:col-span-7 bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 space-y-6 shadow-sm">
           {submitted ? (
             <div className="text-center py-12 space-y-3 animate-fadeIn">
               <CheckCircle className="w-12 h-12 text-emerald-600 mx-auto" />
               <h3 className="text-xl font-bold text-slate-900">Application Submitted!</h3>
               <p className="text-xs text-slate-600">We will get in touch with you shortly.</p>
-              <button onClick={() => setSubmitted(false)} className="px-4 py-2 bg-slate-100 text-xs font-bold text-slate-800 rounded-lg hover:bg-slate-200">Submit Another</button>
+              <button onClick={() => setSubmitted(false)} className="px-4 py-2 bg-slate-100 text-xs font-bold text-slate-800 rounded-xl hover:bg-slate-200">Submit Another</button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -1429,26 +1435,26 @@ function CampusEcosystemView({ showToast }) {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-slate-700 text-xs block mb-1 font-semibold">Full Name *</label>
-                  <input type="text" required value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600" />
+                  <input type="text" required value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition" />
                 </div>
                 <div>
                   <label className="text-slate-700 text-xs block mb-1 font-semibold">Student Email *</label>
-                  <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600" />
+                  <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="text-slate-700 text-xs block mb-1 font-semibold">College / University Name *</label>
-                  <input type="text" required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600" />
+                  <input type="text" required value={formData.college} onChange={(e) => setFormData({ ...formData, college: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition" />
                 </div>
                 <div>
                   <label className="text-slate-700 text-xs block mb-1 font-semibold">Phone Number</label>
-                  <input type="text" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-lg p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600" />
+                  <input type="text" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-xs text-slate-900 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-500/20 transition" />
                 </div>
               </div>
 
-              <button type="submit" className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 font-bold text-xs uppercase tracking-wider text-white rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+              <button type="submit" className="w-full py-3.5 bg-gradient-to-r from-indigo-600 to-indigo-700 hover:from-indigo-500 hover:to-indigo-600 font-bold text-xs uppercase tracking-wider text-white rounded-2xl shadow-lg shadow-indigo-500/20 transition transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
                 <Send className="w-4 h-4" /> Submit Application
               </button>
             </form>
@@ -1456,11 +1462,11 @@ function CampusEcosystemView({ showToast }) {
         </div>
 
         <div className="lg:col-span-5 space-y-6">
-          <div className="bg-white border border-slate-200 rounded-xl p-6 space-y-4 shadow-sm">
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-6 space-y-4 shadow-sm">
             <h3 className="text-sm font-bold uppercase text-indigo-600 tracking-wider flex items-center gap-2">
               <Award className="w-4 h-4 text-amber-500" /> Lead Privileges
             </h3>
-            <ul className="space-y-2 text-xs text-slate-700">
+            <ul className="space-y-2.5 text-xs text-slate-700">
               <li className="flex items-start gap-2">
                 <Check className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                 <span>Leadership Credential Certificate</span>
