@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+ import React, { useState, useRef, useEffect } from 'react';
 import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
@@ -21,23 +21,22 @@ import {
 import { getAnalytics } from 'firebase/analytics';
 
 // -------------------------------------------------------------
-// FIREBASE CONFIGURATION (Loaded dynamically from Vite/Vercel Env)
+// FIREBASE CONFIGURATION (Compatible with Create React App & Vite)
 // -------------------------------------------------------------
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
-  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_API_KEY),
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_AUTH_DOMAIN),
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_PROJECT_ID),
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_STORAGE_BUCKET),
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_MESSAGING_SENDER_ID),
+  appId: process.env.REACT_APP_FIREBASE_APP_ID || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_APP_ID),
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID || (typeof import.meta !== 'undefined' && import.meta.env?.VITE_FIREBASE_MEASUREMENT_ID)
 };
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 
-// Safe initialization for Analytics in browser environment
 if (typeof window !== 'undefined') {
   try {
     getAnalytics(app);
@@ -122,10 +121,9 @@ export default function App() {
   const [authModal, setAuthModal] = useState(null); // 'signin' | 'signup' | null
   const [currentUser, setCurrentUser] = useState(null);
   const [resumeData, setResumeData] = useState(INITIAL_RESUME_DATA);
-  const [selectedTemplate, setSelectedTemplate] = useState('jakes'); // 'jakes' | 'modern' | 'executive'
+  const [selectedTemplate, setSelectedTemplate] = useState('jakes');
   const [toastMessage, setToastMessage] = useState(null);
 
-  // Sync user profile with state upon login/logout
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
@@ -166,7 +164,6 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50/70 text-slate-900 font-sans selection:bg-indigo-500 selection:text-white flex flex-col antialiased relative overflow-x-hidden">
       
-      {/* Toast Notification */}
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 bg-slate-900/90 backdrop-blur-md text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-3 border border-indigo-500/30 animate-bounce max-w-xs sm:max-w-md">
           <Sparkles className="w-5 h-5 text-amber-300 flex-shrink-0 animate-spin" />
@@ -174,12 +171,10 @@ export default function App() {
         </div>
       )}
 
-      {/* AUTH MODAL (SIGN IN / SIGN UP / GOOGLE) */}
       {authModal && (
         <AuthModal type={authModal} onClose={() => setAuthModal(null)} showToast={showToast} />
       )}
 
-      {/* HEADER NAVBAR */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80 transition-all print:hidden shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3 cursor-pointer group" onClick={() => navigateTo('landing')}>
@@ -314,7 +309,6 @@ export default function App() {
         )}
       </header>
 
-      {/* DYNAMIC VIEWS */}
       <main className="flex-1">
         {activeTab === 'landing' && <HeroLandingView navigateTo={navigateTo} setAuthModal={setAuthModal} />}
         {activeTab === 'builder' && (
@@ -339,9 +333,6 @@ export default function App() {
   );
 }
 
-// -------------------------------------------------------------
-// FIREBASE AUTH MODAL (GOOGLE SIGN-IN + EMAIL/PASSWORD)
-// -------------------------------------------------------------
 function AuthModal({ type, onClose, showToast }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -409,7 +400,6 @@ function AuthModal({ type, onClose, showToast }) {
           </div>
         )}
 
-        {/* Google One-Click Login Button */}
         <button
           type="button"
           onClick={handleGoogleSignIn}
@@ -455,9 +445,6 @@ function AuthModal({ type, onClose, showToast }) {
   );
 }
 
-// -------------------------------------------------------------
-// HERO LANDING PAGE VIEW
-// -------------------------------------------------------------
 function HeroLandingView({ navigateTo, setAuthModal }) {
   return (
     <div className="space-y-20 pb-20 animate-fadeIn">
@@ -512,9 +499,6 @@ function HeroLandingView({ navigateTo, setAuthModal }) {
   );
 }
 
-// -------------------------------------------------------------
-// FULL RESUME BUILDER STUDIO
-// -------------------------------------------------------------
 function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSelectedTemplate, showToast }) {
   const [activeSection, setActiveSection] = useState('personal');
   const [mobileView, setMobileView] = useState('editor');
@@ -1058,9 +1042,6 @@ function JakesResumeStudio({ resumeData, setResumeData, selectedTemplate, setSel
   );
 }
 
-// -------------------------------------------------------------
-// TEMPLATES PREVIEWS
-// -------------------------------------------------------------
 function JakesClassicPreview({ resumeData }) {
   return (
     <div className="font-serif leading-tight">
@@ -1321,9 +1302,6 @@ function ExecutiveSplitPreview({ resumeData }) {
   );
 }
 
-// -------------------------------------------------------------
-// FULL ATS SCANNER SUITE
-// -------------------------------------------------------------
 function AtsCheckerSuite({ resumeData, showToast }) {
   const [jdText, setJdText] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -1487,9 +1465,6 @@ function AtsCheckerSuite({ resumeData, showToast }) {
   );
 }
 
-// -------------------------------------------------------------
-// COURSE NOTES & ROADMAPS HUB
-// -------------------------------------------------------------
 function CourseNotesHub({ showToast }) {
   const categories = [
     {
@@ -1553,9 +1528,6 @@ function CourseNotesHub({ showToast }) {
   );
 }
 
-// -------------------------------------------------------------
-// PEER REFERRAL NETWORK HUB
-// -------------------------------------------------------------
 function ReferralNetworkHub({ showToast, setAuthModal }) {
   const listings = [
     { company: "Google", role: "Software Engineering Intern / FTE", location: "Bengaluru", referrer: "Alumni @ NITK", badge: "Tech" },
@@ -1599,9 +1571,6 @@ function ReferralNetworkHub({ showToast, setAuthModal }) {
   );
 }
 
-// -------------------------------------------------------------
-// CAMPUS AMBASSADOR ECOSYSTEM
-// -------------------------------------------------------------
 function CampusEcosystemView({ showToast }) {
   const [formData, setFormData] = useState({
     fullName: "",
@@ -1727,4 +1696,4 @@ function CampusEcosystemView({ showToast }) {
       </div>
     </div>
   );
-} 
+}
