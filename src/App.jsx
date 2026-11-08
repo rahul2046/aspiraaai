@@ -3,7 +3,7 @@ import {
   Sparkles, CheckCircle2, FileText, UserCheck, 
   Briefcase, Users, Building2, Download, ArrowRight, Zap, Menu, X, Plus, Trash2,
   GraduationCap, RefreshCw, Trophy, Send, CheckCircle, AlertCircle, Printer, Eye,
-  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, BookOpen, Share2, ExternalLink, LogOut, Smartphone, Desktop
+  Upload, File, Award, Star, ArrowUpRight, Check, Layout, ShieldCheck, Layers, LogIn, UserPlus, BookOpen, Share2, ExternalLink, LogOut, Smartphone, Monitor
 } from 'lucide-react';
 
 // Firebase modular SDK imports
